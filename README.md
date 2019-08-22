@@ -1,0 +1,2 @@
+# PlayVideo
+yuvencodedecode项目包含Android硬编码、硬解码、yuv渲染3个主要功能在Nokia6上已验证可用，uv值顺序有问题需调整，但y值成像已成功
