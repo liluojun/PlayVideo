@@ -1,7 +1,4 @@
-
-
 *.zip
-*.gradle
 *.pro
 *.iml
 build/
