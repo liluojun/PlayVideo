@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
@@ -31,6 +33,7 @@ public class CameraActivity extends AppCompatActivity {
     private MyGlsurface myGlSurface, myGlSurface1;
 
     private MediaCodec mediaCodec = null;
+    private Button bt;
 
     public static void start(Context context) {
         Intent intent = new Intent();
@@ -45,6 +48,20 @@ public class CameraActivity extends AppCompatActivity {
 
         myGlSurface = findViewById(R.id.myGlSurface);
         myGlSurface1 = findViewById(R.id.myGlSurface1);
+        bt = findViewById(R.id.bt);
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraSurfaceManage.flush();
+            }
+        });
+       Button bt2 = findViewById(R.id.bt2);
+        bt2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraSurfaceManage.flush2();
+            }
+        });
         cameraSurfaceManage = new CameraSurfaceManage(this, myGlSurface);
         cameraSurfaceManage.initCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
         Decoder.getDecoder().setContext(this);

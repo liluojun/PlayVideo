@@ -218,7 +218,8 @@ public class Encoder {
                             ByteBuffer outputBuffer = outputBuffers[outputBufferIndex];
                             byte[] outData = new byte[bufferInfo.size];
                             outputBuffer.get(outData);
-
+                            if (flush)
+                                Log.e("bufferInfo", bufferInfo.size + "");
                             // 获取sps pps
                             if (configbyte == null) {
                                 ByteBuffer spsPpsBuffer = ByteBuffer.wrap(outData);
@@ -278,6 +279,19 @@ public class Encoder {
                 e.printStackTrace();
             }
         }
+    }
+
+    boolean flush = false;
+
+    public void flush() {
+        if (mediaCodec != null) {
+            flush = true;
+            mediaCodec.flush();
+        }
+    }
+
+    public void flush2() {
+        flush = false;
     }
 
     public byte[] configbyteShare;
@@ -641,4 +655,6 @@ public class Encoder {
             }
         }
     }
+
+
 }

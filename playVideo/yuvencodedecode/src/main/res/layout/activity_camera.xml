@@ -3,16 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-    <com.example.administrator.mediacodeapplication.yuv.MyGlsurface
+    android:orientation="vertical">
+
+    <sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface
         android:id="@+id/myGlSurface"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <com.example.administrator.mediacodeapplication.yuv.MyGlsurface
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+        <Button
+            android:id="@+id/bt2"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+    </LinearLayout>
+
+    <sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface
         android:id="@+id/myGlSurface1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CameraSurfaceManage implements Camera.PreviewCallback {
 
-    private static final String TAG ="CameraSurfaceManage" ;
+    private static final String TAG = "CameraSurfaceManage";
     private Context context;
     private Camera camera;
     private Camera.Parameters parameters;
@@ -34,7 +34,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
 
     private boolean isPause;
 
-    public CameraSurfaceManage(Context context,MyGlsurface myGlsurface) {
+    public CameraSurfaceManage(Context context, MyGlsurface myGlsurface) {
         this.context = context;
         this.myGlsurface = myGlsurface;
         framerate = 20;
@@ -46,6 +46,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
 
     /**
      * 初始化相机
+     *
      * @param c
      */
     public void initCamera(int c) {
@@ -174,14 +175,23 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
         }
     }
 
-    public Camera getCamera(){
+    public Camera getCamera() {
         if (camera != null)
             return camera;
         return null;
     }
 
+    public void flush() {
+        if (avcCodec != null)
+            avcCodec.flush();
+    }
+    public void flush2() {
+        if (avcCodec != null)
+            avcCodec.flush2();
+    }
     /**
      * 重置编码器
+     *
      * @param b
      */
     public void resetMediaCode(boolean b) {
@@ -209,15 +219,15 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        Log.e(TAG,"onPreviewFrame");
+        Log.e(TAG, "onPreviewFrame");
         if (!isPause) {
             if (avcCodec == null) {
                 int w = camera.getParameters().getPreviewSize().width;
                 int h = camera.getParameters().getPreviewSize().height;
                 if (ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-                    avcCodec = new Encoder(context,w, h, framerate, biterate, myGlsurface);
+                    avcCodec = new Encoder(context, w, h, framerate, biterate, myGlsurface);
                 } else {
-                    avcCodec = new Encoder(context,w, h, framerate, biterate, false, myGlsurface);
+                    avcCodec = new Encoder(context, w, h, framerate, biterate, false, myGlsurface);
                 }
             }
             avcCodec.encoder(data);
@@ -225,4 +235,6 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
         }
         camera.addCallbackBuffer(mPreviewBuffer);
     }
+
+
 }
