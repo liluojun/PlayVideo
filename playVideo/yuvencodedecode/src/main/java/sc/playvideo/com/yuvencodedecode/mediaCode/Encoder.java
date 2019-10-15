@@ -1,4 +1,4 @@
-package sc.playvideo.com.yuvencodedecode.yuv;
+package sc.playvideo.com.yuvencodedecode.mediaCode;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,9 +8,11 @@ import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.util.Log;
 
-import sc.playvideo.com.yuvencodedecode.CameraActivity;
-import sc.playvideo.com.yuvencodedecode.Decoder;
+import media.jni.JavaToNativeMethod;
+import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
+import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
+import sc.playvideo.com.yuvencodedecode.yuv.YUVData;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class Encoder {
     private MyGlsurface myGlsurface;
 
     private Context context;
+    private byte[] yuv420sp;
 
     @SuppressLint("NewApi")
     public Encoder(Context context, int width, int height, int framerate, int bitrate, MyGlsurface myGlsurface) {
@@ -46,6 +49,7 @@ public class Encoder {
             colorFormat = selectColorFormat(selectCodec("video/avc"), "video/avc");
             m_width = width;
             m_height = height;
+            yuv420sp = new byte[m_width * m_height * 3 / 2];
             m_framerate = framerate;
             this.myGlsurface = myGlsurface;
             dst = new byte[m_height * m_width * 3 / 2];
@@ -55,7 +59,7 @@ public class Encoder {
             yuvData = new YUVData();
             yuvData.yuvH = width;
             yuvData.yuvW = height;
-            MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", width, height);
+            MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", height, width);
             mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, colorFormat);
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, m_framerate);
@@ -83,6 +87,7 @@ public class Encoder {
             colorFormat = selectColorFormat(selectCodec("video/avc"), "video/avc");
             m_width = width;
             m_height = height;
+            yuv420sp = new byte[m_width * m_height * 3 / 2];
             m_framerate = framerate;
             this.myGlsurface = myGlsurface;
             dst = new byte[m_height * m_width * 3 / 2];
@@ -93,7 +98,7 @@ public class Encoder {
             yuvData.yuvH = height;
             yuvData.yuvW = width;
             isRotate = noReta;
-            MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", width, height);
+            MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", height, width);
             mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, colorFormat);
             mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitrate);
             mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, m_framerate);
@@ -175,18 +180,21 @@ public class Encoder {
                     //**由于Android 摄像头默认采集的数据是NV21格式,所以要
                     //转成MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar
                     //让编码器支持
-                    byte[] yuv420sp = new byte[m_width * m_height * 3 / 2];
+
                     if (colorFormat <= 20) {
-                        yuv420sp = nv21ToI420(input, m_width, m_height);
+                        // yuv420sp = nv21ToI420(input, m_width, m_height);
+                        JavaToNativeMethod.getInstence().nv21ToI420(input, yuv420sp, m_width, m_height);
                     } else {
-                        yuv420sp = NV21ToNV12(input, yuv420sp, m_width, m_height);
+                        //yuv420sp = NV21ToNV12(input, yuv420sp, m_width, m_height);
+                        JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height);
+                       // yuv420sp=input;
                     }
                     input = yuv420sp;
 
-                    yuvData.creatBuffer(yByte, uByte, vByte);
-                    if (myGlsurface != null) {
-                        myGlsurface.uplaodTexture(yuvData);
-                    }
+//                    yuvData.creatBuffer(yByte, uByte, vByte);
+//                    if (myGlsurface != null) {
+//                        myGlsurface.uplaodTexture(yuvData);
+//                    }
                 }
                 if (!encode) {
                     return;

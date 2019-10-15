@@ -1,11 +1,11 @@
-package sc.playvideo.com.yuvencodedecode;
+package sc.playvideo.com.yuvencodedecode.mediaCode;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import sc.playvideo.com.yuvencodedecode.CameraActivity;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
-import sc.playvideo.com.yuvencodedecode.yuv.YUVData;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -55,7 +55,7 @@ public class Decoder {
         }
         this.w = w;
         this.h = h;
-        mediaformat = MediaFormat.createVideoFormat("video/avc", w, h);
+        mediaformat = MediaFormat.createVideoFormat("video/avc", h, w);
         mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(sps));
         mediaformat.setByteBuffer("csd-1", ByteBuffer.wrap(pps));
         mediaformat.setInteger(MediaFormat.KEY_FRAME_RATE, m_framerate);

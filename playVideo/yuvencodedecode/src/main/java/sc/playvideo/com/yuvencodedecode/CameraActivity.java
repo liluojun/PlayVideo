@@ -4,26 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
-import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
+import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
 import sc.playvideo.com.yuvencodedecode.yuv.YUVData;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 public class CameraActivity extends AppCompatActivity {
@@ -155,8 +150,8 @@ public class CameraActivity extends AppCompatActivity {
 
         System.arraycopy(outData, 0, yByte, 0, h * w);
         for (int i = h * w; i < outData.length; i += 2) {
-            uByte[(i - h * w) / 2] = outData[i + 1];
-            vByte[(i - h * w) / 2] = outData[i];
+            vByte[(i - h * w) / 2] = outData[i + 1];
+            uByte[(i - h * w) / 2] = outData[i];
         }
         Log.e(TAG, "shared2");
         YUVData yuvData = new YUVData();

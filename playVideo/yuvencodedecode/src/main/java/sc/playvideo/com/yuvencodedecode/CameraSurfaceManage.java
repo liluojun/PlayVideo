@@ -7,7 +7,7 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.widget.Toast;
 
-import sc.playvideo.com.yuvencodedecode.yuv.Encoder;
+import sc.playvideo.com.yuvencodedecode.mediaCode.Encoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
 
 import java.util.List;

@@ -4,7 +4,6 @@ android {
     compileSdkVersion 26
 
 
-
     defaultConfig {
         applicationId "sc.playvideo.com.yuvencodedecode"
         minSdkVersion 19
@@ -13,7 +12,19 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            ldLibs "log"
+            //设置支持的SO库架构
+            abiFilters 'armeabi','armeabi-v7a'//, 'x86', 'x86_64', 'arm64-v8a'
 
+        }
+
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
 
     buildTypes {
@@ -23,6 +34,11 @@ android {
         }
     }
 
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
 }
 
 dependencies {
