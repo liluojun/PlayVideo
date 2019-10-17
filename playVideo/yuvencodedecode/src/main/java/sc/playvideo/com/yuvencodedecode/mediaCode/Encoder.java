@@ -185,9 +185,11 @@ public class Encoder {
                         // yuv420sp = nv21ToI420(input, m_width, m_height);
                         JavaToNativeMethod.getInstence().nv21ToI420(input, yuv420sp, m_width, m_height);
                     } else {
+                        long l = System.currentTimeMillis();
                         //yuv420sp = NV21ToNV12(input, yuv420sp, m_width, m_height);
                         JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height);
-                       // yuv420sp=input;
+                        Log.e(TAG, "encoder time=" + (System.currentTimeMillis() - l));
+                        // yuv420sp=input;
                     }
                     input = yuv420sp;
 

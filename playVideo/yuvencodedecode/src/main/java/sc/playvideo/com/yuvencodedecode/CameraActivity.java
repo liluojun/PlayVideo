@@ -20,6 +20,7 @@ import sc.playvideo.com.yuvencodedecode.yuv.YUVData;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -153,7 +154,7 @@ public class CameraActivity extends AppCompatActivity {
             vByte[(i - h * w) / 2] = outData[i + 1];
             uByte[(i - h * w) / 2] = outData[i];
         }
-        Log.e(TAG, "shared2");
+        Log.e(TAG, "shared2***"+ Arrays.toString(vByte));
         YUVData yuvData = new YUVData();
         yuvData.yuvW = h;
         yuvData.yuvH = w;
