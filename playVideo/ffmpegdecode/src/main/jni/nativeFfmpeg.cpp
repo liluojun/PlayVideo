@@ -10,6 +10,5 @@
 
 JNIEXPORT jint JNICALL Java_sc_playvideo_videonative_MediaNative_creatFfmpeg
         (JNIEnv *, jobject) {
-    LOGE("creat");
-    avcodec_register_all();
+
 };

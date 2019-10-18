@@ -14,7 +14,7 @@ public class Decoder {
     static final String TAG = "Decoder";
     private MediaCodec mCodec;
     private MediaFormat mediaformat;
-    int m_framerate = 15;
+    int m_framerate = 20;
     private int generateIndex;
     CameraActivity cameraActivity;
     int w, h;
@@ -55,22 +55,25 @@ public class Decoder {
         }
         this.w = w;
         this.h = h;
-        mediaformat = MediaFormat.createVideoFormat("video/avc", h, w);
+        mediaformat = MediaFormat.createVideoFormat("video/avc", w, h);
         mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(sps));
         mediaformat.setByteBuffer("csd-1", ByteBuffer.wrap(pps));
         mediaformat.setInteger(MediaFormat.KEY_FRAME_RATE, m_framerate);
+        mediaformat.setInteger(MediaFormat.KEY_BIT_RATE, 1024*1000);
+        mediaformat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2);
         mCodec.configure(mediaformat, null, null, 0);
         mCodec.start();
+        Log.e(TAG, "creatMediaCode=" + w+"**"+h);
         return true;
     }
 
     public void onFrame(UiVideoData uiVideoData) {
         byte[] buf = uiVideoData._data;
-
+        Log.e(TAG, "buf=" + buf.length);
         ByteBuffer[] inputBuffers = mCodec.getInputBuffers();//MediaCodec在此ByteBuffer[]中获取输入数据
         ByteBuffer[] outputBuffers = mCodec.getOutputBuffers(); // 解码后的数据
         int inputBufferIndex = mCodec.dequeueInputBuffer(100);//获取输入缓冲区的索引
-        Log.e(TAG, "inputBufferIndex=" + inputBufferIndex);
+        //Log.e(TAG, "inputBufferIndex=" + inputBufferIndex);
         if (inputBufferIndex >= 0) {
             long pts = computePresentationTime(generateIndex);
             ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
@@ -91,7 +94,7 @@ public class Decoder {
             cameraActivity.shared(outData, w, h);
             mCodec.releaseOutputBuffer(outputBufferIndex, true);
             outputBufferIndex = -1;
-            Log.e(TAG, outData.length + "");
+            Log.e(TAG, outData.length + "**while");
         }
     }
 
@@ -101,5 +104,14 @@ public class Decoder {
 
     public void setContext(CameraActivity cameraActivity) {
         this.cameraActivity = cameraActivity;
+    }
+
+    public void stopDecoder() {
+        try {
+            mCodec.stop();
+            mCodec.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

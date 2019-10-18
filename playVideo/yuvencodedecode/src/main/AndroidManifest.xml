@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sc.playvideo.com.yuvencodedecode">
+
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
@@ -36,7 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CameraActivity"></activity>
+        <activity
+            android:name=".CameraActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

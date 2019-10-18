@@ -51,14 +51,15 @@ public class CameraActivity extends AppCompatActivity {
                 cameraSurfaceManage.flush();
             }
         });
-       Button bt2 = findViewById(R.id.bt2);
+        Button bt2 = findViewById(R.id.bt2);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cameraSurfaceManage.flush2();
+                cameraSurfaceManage.startCutter720p();
             }
         });
         cameraSurfaceManage = new CameraSurfaceManage(this, myGlSurface);
+        cameraSurfaceManage.setWh(1280, 720);
         cameraSurfaceManage.initCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
         Decoder.getDecoder().setContext(this);
     }
@@ -144,20 +145,18 @@ public class CameraActivity extends AppCompatActivity {
 
     public void shared(byte[] outData, int w, int h) {
         //渲染
-        Log.e(TAG, "shared");
+        Log.e(TAG, "shared=" + outData.length + "**w=" + w + "**h=" + h);
         byte[] yByte = new byte[h * w];
         byte[] uByte = new byte[h * w / 4];
         byte[] vByte = new byte[h * w / 4];
-
         System.arraycopy(outData, 0, yByte, 0, h * w);
         for (int i = h * w; i < outData.length; i += 2) {
             vByte[(i - h * w) / 2] = outData[i + 1];
             uByte[(i - h * w) / 2] = outData[i];
         }
-        Log.e(TAG, "shared2***"+ Arrays.toString(vByte));
         YUVData yuvData = new YUVData();
-        yuvData.yuvW = h;
-        yuvData.yuvH = w;
+        yuvData.yuvW = w;
+        yuvData.yuvH = h;
         yuvData.creatBuffer(yByte, uByte, vByte);
         myGlSurface1.uplaodTexture(yuvData);
     }

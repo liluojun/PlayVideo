@@ -21,4 +21,15 @@ public class JavaToNativeMethod {
         nativeMethod.nv21ToNv12(src, dst, w, h);
     }
 
+    public void cutterYuv(byte[] src, byte[] dst, int w, int h) {
+        nativeMethod.nv21ToNv12(src, dst, w, h);
+    }
+
+    public void nv21CutterToI420(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h) {
+        nativeMethod.nv21CutterToI420(src, dst, cutter_w, cutter_h, w, h);
+    }
+
+    public void nv21CutterToNv12(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h) {
+        nativeMethod.nv21CutterToNv12(src, dst, cutter_w, cutter_h, w, h);
+    }
 }

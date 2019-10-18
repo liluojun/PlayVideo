@@ -23,6 +23,7 @@ android {
 
     sourceSets {
         main {
+            jni.srcDirs = []
             jniLibs.srcDirs = ['libs']
         }
     }
@@ -33,6 +34,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 
     externalNativeBuild {
         ndkBuild {
