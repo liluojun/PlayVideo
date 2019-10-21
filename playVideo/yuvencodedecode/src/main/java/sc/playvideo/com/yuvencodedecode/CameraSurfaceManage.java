@@ -127,7 +127,6 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
             if (camera == null) {
                 camera = Camera.open(c);
             }
-            camera.setPreviewCallbackWithBuffer(this);
             camera.setDisplayOrientation(90);
             if (parameters == null)
                 parameters = camera.getParameters();
@@ -164,8 +163,6 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
                     }
                 }
             }
-            List<int[]> supportedPreviewFpsRange = parameters.getSupportedPreviewFpsRange();
-            //TODO 控制帧率20帧
             camera.setParameters(parameters);
 
             camera.setPreviewTexture(myGlsurface.initSurTexture());
@@ -246,7 +243,6 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        Log.e(TAG, "onPreviewFrame");
         if (!isPause) {
             if (isCutter) {
                 if (avcCodec == null) {
@@ -271,7 +267,8 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
                 }
                 avcCodec.encoder(data);
             }
-            camera.addCallbackBuffer(mPreviewBuffer);
+
+            camera.addCallbackBuffer(data);
 
         }
 

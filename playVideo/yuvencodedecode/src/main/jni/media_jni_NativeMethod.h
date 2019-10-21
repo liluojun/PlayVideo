@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ([B[BII)V
  */
 JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToI420
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint,jbyteArray,jbyteArray,jbyteArray);
 
 /*
  * Class:     media_jni_NativeMethod
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToI420
  * Signature: ([B[BII)V
  */
 JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint,jbyteArray,jbyteArray,jbyteArray);
 
 /*
  * Class:     media_jni_NativeMethod
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
  * Signature: ([B[BIIII)V
  */
 JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21CutterToI420
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint, jint, jint,jbyteArray,jbyteArray,jbyteArray);
 
 /*
  * Class:     media_jni_NativeMethod
@@ -37,7 +37,7 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21CutterToI420
  * Signature: ([B[BIIII)V
  */
 JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21CutterToNv12
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jbyteArray, jbyteArray, jint, jint, jint, jint,jbyteArray,jbyteArray,jbyteArray);
 
 #ifdef __cplusplus
 }

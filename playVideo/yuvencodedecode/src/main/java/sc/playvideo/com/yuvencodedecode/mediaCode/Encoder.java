@@ -197,13 +197,18 @@ public class Encoder {
                     //转成MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar
                     //让编码器支持
                     if (colorFormat <= 20) {
-                        JavaToNativeMethod.getInstence().nv21ToI420(input, yuv420sp, m_width, m_height);
+                        JavaToNativeMethod.getInstence().nv21ToI420(input, yuv420sp, m_width, m_height, yByte, uByte, vByte);
                     } else {
                         long l = System.currentTimeMillis();
-                        JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height);
+                        JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height, yByte, uByte, vByte);
                         Log.e(TAG, "encoder time=" + (System.currentTimeMillis() - l));
 
                     }
+                    yuvData.creatBuffer(yByte, uByte, vByte);
+                    if (myGlsurface != null) {
+                        myGlsurface.uplaodTexture(yuvData);
+                    }
+
                     input = yuv420sp;
                 }
                 if (!encode) {
@@ -298,17 +303,18 @@ public class Encoder {
             try {
                 if (input != null && input.length != 0) {
                     if (colorFormat <= 20) {
-                        JavaToNativeMethod.getInstence().nv21CutterToI420(input, yuv420sp, m_width, m_height, w, h);
+                        JavaToNativeMethod.getInstence().nv21CutterToI420(input, yuv420sp, m_width, m_height, w, h, yByte, uByte, vByte);
                     } else {
                         long l = System.currentTimeMillis();
-                        JavaToNativeMethod.getInstence().nv21CutterToNv12(input, yuv420sp, m_width, m_height, w, h);
+                        JavaToNativeMethod.getInstence().nv21CutterToNv12(input, yuv420sp, m_width, m_height, w, h, yByte, uByte, vByte);
                         Log.e(TAG, "encoder time=" + (System.currentTimeMillis() - l));
-                        if (!a) {
-                            a = true;
-                            wfile(yuv420sp);
-                        }
                     }
+
                     input = yuv420sp;
+                    yuvData.creatBuffer(yByte, uByte, vByte);
+                    if (myGlsurface != null) {
+                        myGlsurface.uplaodTexture(yuvData);
+                    }
                     //  Log.e(TAG,"encoder input="+input.length+"**w"+w+"**h"+h+"***m_width"+m_width+"***m_height="+m_height);
                 }
                 if (!encode) {

@@ -13,23 +13,23 @@ public class JavaToNativeMethod {
         return INSTENCE;
     }
 
-    public void nv21ToI420(byte[] src, byte[] dst, int w, int h) {
-        nativeMethod.nv21ToI420(src, dst, w, h);
+    public void nv21ToI420(byte[] src, byte[] dst, int w, int h,byte[] y,byte[] u,byte[] v) {
+        nativeMethod.nv21ToI420(src, dst, w, h,y,u,v);
     }
 
-    public void nv21ToNv12(byte[] src, byte[] dst, int w, int h) {
-        nativeMethod.nv21ToNv12(src, dst, w, h);
+    public void nv21ToNv12(byte[] src, byte[] dst, int w, int h,byte[] y,byte[] u,byte[] v) {
+        nativeMethod.nv21ToNv12(src, dst, w, h,y,u,v);
     }
 
-    public void cutterYuv(byte[] src, byte[] dst, int w, int h) {
-        nativeMethod.nv21ToNv12(src, dst, w, h);
+    public void cutterYuv(byte[] src, byte[] dst, int w, int h,byte[] y,byte[] u,byte[] v) {
+        nativeMethod.nv21ToNv12(src, dst, w, h,y,u,v);
     }
 
-    public void nv21CutterToI420(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h) {
-        nativeMethod.nv21CutterToI420(src, dst, cutter_w, cutter_h, w, h);
+    public void nv21CutterToI420(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h,byte[] y,byte[] u,byte[] v) {
+        nativeMethod.nv21CutterToI420(src, dst, cutter_w, cutter_h, w, h,y,u,v);
     }
 
-    public void nv21CutterToNv12(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h) {
-        nativeMethod.nv21CutterToNv12(src, dst, cutter_w, cutter_h, w, h);
+    public void nv21CutterToNv12(byte[] src, byte[] dst, int cutter_w, int cutter_h, int w, int h,byte[] y,byte[] u,byte[] v) {
+        nativeMethod.nv21CutterToNv12(src, dst, cutter_w, cutter_h, w, h,y,u,v);
     }
 }
