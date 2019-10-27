@@ -14,8 +14,18 @@ class FfmpegEncod {
 public:
     int creatFFmpeg();
 
+    int encodeFFmpeg(uint8_t *framedata, int framelen,//input
+                     uint8_t *outputY,uint8_t *outputU,uint8_t *outputV, int *width, int *height, AVPixelFormat *pixfmt);
+
+    int initAVCodecContext(int width, int heigth, int fps, AVPixelFormat pixFmt);
+
+    void copyYUVData(AVCodecContext *pPacket, AVPacket *outputframe, uint8_t *string);
+
+public:
     AVCodec *mAVCodec = NULL;
-    AVCodecContext *mAVCodecContext=NULL;
+    AVCodecContext *mAVCodecContext = NULL;
+    AVFrame *mAVFrame = NULL;
+    AVPacket *mAVPacket = NULL;
 };
 #ifdef __cplusplus
 }
