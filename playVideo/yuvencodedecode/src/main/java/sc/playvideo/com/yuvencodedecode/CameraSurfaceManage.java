@@ -38,7 +38,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
     public CameraSurfaceManage(Context context, MyGlsurface myGlsurface) {
         this.context = context;
         this.myGlsurface = myGlsurface;
-        framerate = 20;
+        framerate = 30;
         biterate = 1024 * 1000;
     }
 
@@ -52,75 +52,81 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
      *
      * @param c
      */
-    public void initCamera(int c) {
+    public void initCamera(final int c) {
         //获取相机对象的实例
-        try {
-            if (camera == null) {
-                camera = Camera.open(c);
-            }
-            camera.setPreviewCallbackWithBuffer(this);
-            camera.setDisplayOrientation(90);
-            if (parameters == null)
-                parameters = camera.getParameters();
-
-            //设置预览格式
-            parameters.setPreviewFormat(ImageFormat.NV21);
-
-            parameters.setPreviewFrameRate(framerate);
-
-            List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
-
-            boolean flag = false;
-            for (int i = 0; i < supportedPreviewSizes.size(); i++) {
-                if (supportedPreviewSizes.get(i).width == width && supportedPreviewSizes.get(i).height == height) {
-                    flag = true;
-                    break;
-                }
-            }
-
-            parameters.setPreviewSize(width, height);
-            List<String> supportedFocusModes = parameters.getSupportedFocusModes();
-
-            if (supportedFocusModes.size() > 0) {
-                boolean mFocusModes = true;
-
-                for (int i = 0; i < supportedFocusModes.size(); i++) {
-                    if (Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
-                            .equals(supportedFocusModes.get(i))) {
-                        parameters
-                                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 连续对焦
-                        camera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上
-                        mFocusModes = false;
-                        break;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (camera == null) {
+                        camera = Camera.open(c);
                     }
-                }
+                    camera.setDisplayOrientation(90);
+                    if (parameters == null)
+                        parameters = camera.getParameters();
 
-                if (mFocusModes) {
-                    for (int j = 0; j < supportedFocusModes.size(); j++) {
-                        if (Camera.Parameters.FOCUS_MODE_AUTO
-                                .equals(supportedFocusModes.get(j))) {
-                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                    //设置预览格式
+                    parameters.setPreviewFormat(ImageFormat.NV21);
+
+                    parameters.setPreviewFrameRate(framerate);
+
+                    List<Camera.Size> supportedPreviewSizes = parameters.getSupportedPreviewSizes();
+
+                    boolean flag = false;
+                    for (int i = 0; i < supportedPreviewSizes.size(); i++) {
+                        if (supportedPreviewSizes.get(i).width == width && supportedPreviewSizes.get(i).height == height) {
+                            flag = true;
                             break;
                         }
                     }
+
+                    parameters.setPreviewSize(width, height);
+                    List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+
+                    if (supportedFocusModes.size() > 0) {
+                        boolean mFocusModes = true;
+
+                        for (int i = 0; i < supportedFocusModes.size(); i++) {
+                            if (Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
+                                    .equals(supportedFocusModes.get(i))) {
+                                parameters
+                                        .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 连续对焦
+                                camera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上
+                                mFocusModes = false;
+                                break;
+                            }
+                        }
+
+                        if (mFocusModes) {
+                            for (int j = 0; j < supportedFocusModes.size(); j++) {
+                                if (Camera.Parameters.FOCUS_MODE_AUTO
+                                        .equals(supportedFocusModes.get(j))) {
+                                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    List<int[]> supportedPreviewFpsRange = parameters.getSupportedPreviewFpsRange();
+                    //TODO 控制帧率20帧
+                    camera.setParameters(parameters);
+
+                    camera.setPreviewTexture(myGlsurface.initSurTexture());
+                    mPreviewBuffer = new byte[width * height * 3 / 2];
+                    camera.addCallbackBuffer(mPreviewBuffer);
+                    camera.setPreviewCallbackWithBuffer(CameraSurfaceManage.this);
+                    //开始显示实时摄像机图像。
+                    camera.startPreview();
+
+                } catch (Exception e) {
+                    Toast.makeText(context, "相机开启失败，请检查相机是否被占用或相机权限是否被开启", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
-            List<int[]> supportedPreviewFpsRange = parameters.getSupportedPreviewFpsRange();
-            //TODO 控制帧率20帧
-            camera.setParameters(parameters);
+        }).start();
 
-            camera.setPreviewTexture(myGlsurface.initSurTexture());
-            mPreviewBuffer = new byte[width * height * 3 / 2];
-            camera.addCallbackBuffer(mPreviewBuffer);
-            camera.setPreviewCallbackWithBuffer(this);
-            //开始显示实时摄像机图像。
-            camera.startPreview();
-
-        } catch (Exception e) {
-            Toast.makeText(context, "相机开启失败，请检查相机是否被占用或相机权限是否被开启", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
+
     public void initCameraCut(int c) {
         //获取相机对象的实例
         try {
@@ -244,6 +250,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         if (!isPause) {
+            long l = System.currentTimeMillis();
             if (isCutter) {
                 if (avcCodec == null) {
                     int w = 672;
@@ -269,7 +276,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
             }
 
             camera.addCallbackBuffer(data);
-
+            Log.e(TAG, "onPreviewFrame=" + (System.currentTimeMillis() - l));
         }
 
     }

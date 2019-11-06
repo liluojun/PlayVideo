@@ -1,1 +1,1 @@
-include ':app', ':yuvencodedecode', ':ffmpegdecode', ':libyuv'
+include ':app', ':yuvencodedecode', ':ffmpegdecode', ':libyuv', ':test'

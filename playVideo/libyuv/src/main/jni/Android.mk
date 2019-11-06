@@ -77,7 +77,7 @@ LOCAL_MODULE := libyuv
 #ifneq ($(LIBYUV_DISABLE_JPEG), "yes")
 #LOCAL_SHARED_LIBRARIES := libjpeg
 #endif
-
+#include $(BUILD_STATIC_LIBRARY)
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -104,3 +104,4 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE := libyuv_unittest
 include $(BUILD_NATIVE_TEST)
+

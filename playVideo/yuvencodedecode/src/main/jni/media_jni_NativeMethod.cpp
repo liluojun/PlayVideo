@@ -1,11 +1,16 @@
 //
 // Created by Administrator on 2019/10/15.
 //
+
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
+#ifndef _Included_media_jni_NativeMethod
+#define _Included_media_jni_NativeMethod
+#ifdef __cplusplus
+extern "C" {
 #include "libyuv.h"
 #include <android/log.h>
 #include "media_jni_NativeMethod.h"
-
-#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
+#endif
 /*
  * Class:     media_jni_NativeMethod
  * Method:    nv21ToI420
@@ -40,8 +45,17 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToI420
     //I420旋转方法注释但不能删除
 //    libyuv::I420Rotate(y_tran, w, u_tran, w >> 1, v_tran, w >> 1, y_dst, h, u_dst, h >> 1, v_dst,
 //                       h >> 1, h, w, libyuv::kRotate270);
-
-};
+    env->ReleaseByteArrayElements(src, (jbyte *) srcArray, 0);
+    env->DeleteLocalRef(src);
+    env->ReleaseByteArrayElements(dst, (jbyte *) dstArray, 0);
+    env->DeleteLocalRef(dst);
+    env->ReleaseByteArrayElements(y, (jbyte *) yArray, 0);
+    env->DeleteLocalRef(y);
+    env->ReleaseByteArrayElements(v, (jbyte *) vArray, 0);
+    env->DeleteLocalRef(v);
+    env->ReleaseByteArrayElements(u, (jbyte *) uArray, 0);
+    env->DeleteLocalRef(u);
+} ;
 
 /*
  * Class:     media_jni_NativeMethod
@@ -51,20 +65,24 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToI420
 JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
         (JNIEnv *env, jobject job, jbyteArray src, jbyteArray dst, jint w, jint h, jbyteArray y,
          jbyteArray u, jbyteArray v) {
+    LOGE("111");
     uint8_t *srcArray = (uint8_t *) env->GetByteArrayElements(src, 0);
     uint8_t *dstArray = (uint8_t *) env->GetByteArrayElements(dst, 0);
+    LOGE("222");
     uint8_t *yArray = (uint8_t *) env->GetByteArrayElements(y, NULL);
     uint8_t *uArray = (uint8_t *) env->GetByteArrayElements(u, NULL);
     uint8_t *vArray = (uint8_t *) env->GetByteArrayElements(v, NULL);
+    LOGE("3333");
 //    jbyteArray transitJbyteArray = env->NewByteArray(w * h * 3 / 2);
 //    uint8_t *transitArray = (uint8_t *) env->GetByteArrayElements(transitJbyteArray, 0);
     jint ySize = w * h;
-    LOGE("w=%d  h=%d  ysize=%d", w, h, ySize);
+    //LOGE("w=%d  h=%d  ysize=%d", w, h, ySize);
     jint uvSize = (w >> 1) * (h >> 1);
     uint8_t *y_src = srcArray;
     uint8_t *uv_src = srcArray + ySize;
     uint8_t *u_src = srcArray + ySize;
     uint8_t *v_src = srcArray + ySize + uvSize;
+    LOGE("555");
 //    uint8_t *y_transit = transitArray;
 //    uint8_t *u_transit = transitArray + ySize;
 //    uint8_t *v_transit = transitArray + ySize + uvSize;
@@ -79,7 +97,19 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
     libyuv::I420ToNV12(yArray, w, uArray, w >> 1, vArray, w >> 1, y_dst, w, uv_dst, w, w, h);
 //    env->ReleaseByteArrayElements(transitJbyteArray, (jbyte *) transitArray, 0);
 //    env->DeleteLocalRef(transitJbyteArray);
-};
+    LOGE("666");
+    env->ReleaseByteArrayElements(src, (jbyte *) srcArray, 0);
+    env->DeleteLocalRef(src);
+    env->ReleaseByteArrayElements(dst, (jbyte *) dstArray, 0);
+    env->DeleteLocalRef(dst);
+    env->ReleaseByteArrayElements(y, (jbyte *) yArray, 0);
+    env->DeleteLocalRef(y);
+    env->ReleaseByteArrayElements(v, (jbyte *) vArray, 0);
+    env->DeleteLocalRef(v);
+    env->ReleaseByteArrayElements(u, (jbyte *) uArray, 0);
+    env->DeleteLocalRef(u);
+    LOGE("777");
+} ;
 /*
  * Class:     media_jni_NativeMethod
  * Method:    nv21CutterToI420
@@ -113,13 +143,22 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21CutterToI420
     libyuv::ConvertToI420(transitArray, ySize + uvSize, y_dst, cw, u_dst, cw >> 1,
                           v_dst, cw >> 1,
                           startx, starty, w, h, cw, ch, libyuv::kRotate0, libyuv::FOURCC_I420);
-    memcpy(yArray, y_dst, ySize);
+    memcpy(yArray, y_dst, cw * ch);
     memcpy(uArray, u_dst, (cw * ch) >> 2);
     memcpy(vArray, v_dst, (cw * ch) >> 2);
     env->ReleaseByteArrayElements(transitJbyteArray, (jbyte *) transitArray, 0);
     env->DeleteLocalRef(transitJbyteArray);
-
-};
+    env->ReleaseByteArrayElements(src, (jbyte *) srcArray, 0);
+    env->DeleteLocalRef(src);
+    env->ReleaseByteArrayElements(dst, (jbyte *) dstArray, 0);
+    env->DeleteLocalRef(dst);
+    env->ReleaseByteArrayElements(y, (jbyte *) yArray, 0);
+    env->DeleteLocalRef(y);
+    env->ReleaseByteArrayElements(v, (jbyte *) vArray, 0);
+    env->DeleteLocalRef(v);
+    env->ReleaseByteArrayElements(u, (jbyte *) uArray, 0);
+    env->DeleteLocalRef(u);
+} ;
 
 /*
  * Class:     media_jni_NativeMethod
@@ -156,8 +195,21 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21CutterToNv12
 
     libyuv::I420ToNV12(yArray, cw, uArray, cw >> 1, vArray, cw >> 1, y_dst, cw,
                        uv_dst, cw, cw, ch);
-
     env->ReleaseByteArrayElements(transitJbyteArray, (jbyte *) transitArray, 0);
     env->DeleteLocalRef(transitJbyteArray);
-};
+    env->ReleaseByteArrayElements(src, (jbyte *) srcArray, 0);
+    env->DeleteLocalRef(src);
+    env->ReleaseByteArrayElements(dst, (jbyte *) dstArray, 0);
+    env->DeleteLocalRef(dst);
+    env->ReleaseByteArrayElements(y, (jbyte *) yArray, 0);
+    env->DeleteLocalRef(y);
+    env->ReleaseByteArrayElements(v, (jbyte *) vArray, 0);
+    env->DeleteLocalRef(v);
+    env->ReleaseByteArrayElements(u, (jbyte *) uArray, 0);
+    env->DeleteLocalRef(u);
+} ;
+#ifdef __cplusplus
+}
+#endif
+#endif
 

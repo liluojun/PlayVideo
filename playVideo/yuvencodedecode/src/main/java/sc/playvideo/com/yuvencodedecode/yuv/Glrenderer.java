@@ -28,12 +28,13 @@ public class Glrenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//视频栏的背景色 黑色
         //设置颜色缓存的清除值
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         //设置背景的颜色
 //        GLES20.glClearColor(1.0f, 0.0f, 0.0f, 1.0f);//红色
 //        GLES20.glClearColor(29.0f, 29.0f, 31.0f, 1.0f);//视频栏的背景色  白色
-        GLES20.glClearColor(43.0f, 43.0f, 43.0f, 43.0f);//视频栏的背景色 黑色
+
     }
 
     @Override

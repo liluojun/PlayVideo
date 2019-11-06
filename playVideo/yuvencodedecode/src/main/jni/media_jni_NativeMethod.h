@@ -7,6 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /*
  * Class:     media_jni_NativeMethod
  * Method:    nv21ToI420
