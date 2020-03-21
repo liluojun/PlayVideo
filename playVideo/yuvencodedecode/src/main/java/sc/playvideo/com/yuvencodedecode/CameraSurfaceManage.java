@@ -7,6 +7,7 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.widget.Toast;
 
+import media.jni.JavaToNativeMethod;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Encoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
@@ -38,7 +39,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
     public CameraSurfaceManage(Context context, MyGlsurface myGlsurface) {
         this.context = context;
         this.myGlsurface = myGlsurface;
-        framerate = 30;
+        framerate = 20;
         biterate = 1024 * 1000;
     }
 
@@ -117,7 +118,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
                     camera.setPreviewCallbackWithBuffer(CameraSurfaceManage.this);
                     //开始显示实时摄像机图像。
                     camera.startPreview();
-
+                    initDecoder();
                 } catch (Exception e) {
                     Toast.makeText(context, "相机开启失败，请检查相机是否被占用或相机权限是否被开启", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -177,10 +178,19 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
             camera.setPreviewCallbackWithBuffer(this);
             //开始显示实时摄像机图像。
             camera.startPreview();
-
+            initDecoder();
         } catch (Exception e) {
             Toast.makeText(context, "相机开启失败，请检查相机是否被占用或相机权限是否被开启", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        }
+    }
+
+    private void initDecoder() {
+        Log.e(TAG, "initDecoder");
+        if (JavaToNativeMethod.getInstence().creatFfmpeg() == 0) {
+            Log.e(TAG, "initDecoder1");
+            int i = JavaToNativeMethod.getInstence().initContext(width, height, framerate);
+            Log.e(TAG, "initDecoder  " + i);
         }
     }
 

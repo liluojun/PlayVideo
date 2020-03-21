@@ -20,7 +20,7 @@
 #endif
 
 #ifdef __cplusplus
-namespace libyuv {
+namespace yuv.libyuv {
 extern "C" {
 #endif
 
@@ -6228,7 +6228,7 @@ __declspec(naked) void ARGBLumaColorTableRow_SSSE3(const uint8_t* src_argb,
 
 #ifdef __cplusplus
 }  // extern "C"
-}  // namespace libyuv
+}  // namespace yuv.libyuv
 #endif
 
 #endif  // !defined(LIBYUV_DISABLE_X86) && (defined(_M_IX86) || defined(_M_X64))

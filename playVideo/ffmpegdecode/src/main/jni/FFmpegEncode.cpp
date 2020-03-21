@@ -1,15 +1,16 @@
 //
 // Created by Administrator on 2019/10/20.
 //
-
 #include "FFmpegEncode.h"
 
 #ifdef __cplusplus
 extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h" }
 #endif
-int FfmpegEncod::creatFFmpeg() {
+int FFmpegEncode::creatFFmpeg(AVCodecID id) {
     avcodec_register_all();
-    mAVCodec = avcodec_find_decoder(AVCodecID::AV_CODEC_ID_H264);
+    mAVCodec = avcodec_find_decoder(id);
     if (mAVCodec == NULL) {
         printf("mAVCodec==NULL\n");
         return -1;
@@ -37,7 +38,7 @@ int FfmpegEncod::creatFFmpeg() {
     av_init_packet(mAVPacket);
     return 0;
 }
-int FfmpegEncod::initAVCodecContext(int width, int heigth, int fps, AVPixelFormat pixFmt) {
+int FFmpegEncode::initAVCodecContext(int width, int heigth, int fps, AVPixelFormat pixFmt) {
     if (mAVCodecContext == NULL) {
         printf("initAVCodecContext NULL\n");
         return -1;
@@ -50,11 +51,12 @@ int FfmpegEncod::initAVCodecContext(int width, int heigth, int fps, AVPixelForma
     mAVCodecContext->height = heigth;
     mAVCodecContext->frame_bits = fps;
     mAVCodecContext->pix_fmt = pixFmt;
+    return 0;
 }
-int FfmpegEncod::encodeFFmpeg(uint8_t *framedata, int framelen,//input
-                              uint8_t *outputY, uint8_t *outputU, uint8_t *outputV, int *width,
-                              int *height,
-                              AVPixelFormat *pixfmt) {
+int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
+                               uint8_t *outputY, uint8_t *outputU, uint8_t *outputV, int *width,
+                               int *height,
+                               AVPixelFormat pixfmt) {
     if (mAVPacket == NULL) {
         printf("encodeFFmpeg NULL\n");
         return -1;
@@ -77,7 +79,7 @@ int FfmpegEncod::encodeFFmpeg(uint8_t *framedata, int framelen,//input
                 outputV = mAVFrame->data[2];
                 width = &(mAVCodecContext->width);
                 height = &(mAVCodecContext->height);
-                pixfmt = &(mAVCodecContext->pix_fmt);
+                pixfmt = mAVCodecContext->pix_fmt;
                 break;
             }
             default: {
@@ -88,13 +90,20 @@ int FfmpegEncod::encodeFFmpeg(uint8_t *framedata, int framelen,//input
         return 0;
     }
 }
+void
+FFmpegEncode::copyYUVData(AVCodecContext *mAVCodecContext, AVPacket *pPacket,
+                          uint8_t *outputframe) {
+
+}
+void
+FFmpegEncode::unEncode() {
+    avcodec_close(mAVCodecContext);
+    av_free(mAVCodecContext);
+    av_frame_free(&mAVFrame);
+}
 #ifdef __cplusplus
 }
 
-void
-FfmpegEncod::copyYUVData(AVCodecContext *mAVCodecContext, AVPacket *pPacket, uint8_t *outputframe) {
-
-}
 
 #endif
 

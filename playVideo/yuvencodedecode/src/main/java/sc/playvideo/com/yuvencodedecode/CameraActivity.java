@@ -161,6 +161,16 @@ public class CameraActivity extends AppCompatActivity {
         myGlSurface1.uplaodTexture(yuvData);
     }
 
+    public void shared(byte[] y, byte[] u, byte[] v, int w, int h) {
+        //渲染
+
+        YUVData yuvData = new YUVData();
+        yuvData.yuvW = w;
+        yuvData.yuvH = h;
+        yuvData.creatBuffer(y, u, v);
+        myGlSurface1.uplaodTexture(yuvData);
+    }
+
     void wfile(byte[] b) {
         try {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/aa.yuv");

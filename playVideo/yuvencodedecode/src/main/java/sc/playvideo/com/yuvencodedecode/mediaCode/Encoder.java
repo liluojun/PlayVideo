@@ -268,14 +268,16 @@ public class Encoder {
                                     u._data = keyframe;
                                     //编码后的数据
                                     if (myGlsurface != null) {
-                                        Decoder.getDecoder().onFrame(u);
+                                        //  Decoder.getDecoder().onFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
                                     u._data = outData;
                                     //编码后的数据
                                     if (myGlsurface != null) {
-                                        Decoder.getDecoder().onFrame(u);
+                                        //  Decoder.getDecoder().onFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
@@ -366,14 +368,16 @@ public class Encoder {
                                     u._data = keyframe;
                                     //编码后的数据
                                     if (myGlsurface != null) {
-                                        Decoder.getDecoder().onFrame(u);
+                                        // Decoder.getDecoder().onFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
                                     u._data = outData;
                                     //编码后的数据
                                     if (myGlsurface != null) {
-                                        Decoder.getDecoder().onFrame(u);
+                                        // Decoder.getDecoder().onFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);

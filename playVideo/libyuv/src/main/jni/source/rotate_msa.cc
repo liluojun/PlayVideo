@@ -12,10 +12,10 @@
 
 // This module is for GCC MSA
 #if !defined(LIBYUV_DISABLE_MSA) && defined(__mips_msa)
-#include "libyuv/macros_msa.h"
+#include "yuv.libyuv/macros_msa.h"
 
 #ifdef __cplusplus
-namespace libyuv {
+namespace yuv.libyuv {
 extern "C" {
 #endif
 
@@ -244,7 +244,7 @@ void TransposeUVWx16_MSA(const uint8_t* src,
 
 #ifdef __cplusplus
 }  // extern "C"
-}  // namespace libyuv
+}  // namespace yuv.libyuv
 #endif
 
 #endif  // !defined(LIBYUV_DISABLE_MSA) && defined(__mips_msa)

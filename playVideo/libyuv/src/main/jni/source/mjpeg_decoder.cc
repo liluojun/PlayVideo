@@ -38,9 +38,9 @@ extern "C" {
 }  // extern "C"
 #endif
 
-#include "libyuv/planar_functions.h"  // For CopyPlane().
+#include "yuv.libyuv/planar_functions.h"  // For CopyPlane().
 
-namespace libyuv {
+namespace yuv.libyuv {
 
 #ifdef HAVE_SETJMP
 struct SetJmpErrorMgr {
@@ -569,5 +569,5 @@ JpegSubsamplingType MJpegDecoder::JpegSubsamplingTypeHelper(
   return kJpegUnknown;
 }
 
-}  // namespace libyuv
+}  // namespace yuv.libyuv
 #endif  // HAVE_JPEG

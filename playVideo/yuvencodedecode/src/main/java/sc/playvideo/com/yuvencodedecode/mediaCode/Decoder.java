@@ -4,6 +4,7 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 
+import media.jni.JavaToNativeMethod;
 import sc.playvideo.com.yuvencodedecode.CameraActivity;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
 
@@ -18,6 +19,9 @@ public class Decoder {
     private int generateIndex;
     CameraActivity cameraActivity;
     int w, h;
+    private byte[] yByte;
+    private byte[] vByte;
+    private byte[] uByte;
 
     public static Decoder getDecoder() {
         if (decoder == null)
@@ -55,16 +59,27 @@ public class Decoder {
         }
         this.w = w;
         this.h = h;
+        yByte = new byte[w * h];
+        vByte = new byte[w * h / 4];
+        uByte = new byte[w * h / 4];
         mediaformat = MediaFormat.createVideoFormat("video/avc", w, h);
         mediaformat.setByteBuffer("csd-0", ByteBuffer.wrap(sps));
         mediaformat.setByteBuffer("csd-1", ByteBuffer.wrap(pps));
         mediaformat.setInteger(MediaFormat.KEY_FRAME_RATE, m_framerate);
-        mediaformat.setInteger(MediaFormat.KEY_BIT_RATE, 1024*1000);
+        mediaformat.setInteger(MediaFormat.KEY_BIT_RATE, 1024 * 1000);
         mediaformat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2);
         mCodec.configure(mediaformat, null, null, 0);
         mCodec.start();
-        Log.e(TAG, "creatMediaCode=" + w+"**"+h);
+        Log.e(TAG, "creatMediaCode=" + w + "**" + h);
         return true;
+    }
+
+    public void onFFmpegFrame(UiVideoData uiVideoData) {
+        int encode = JavaToNativeMethod.getInstence().encode(uiVideoData._data, yByte, vByte, uByte, w, h);
+        Log.e(TAG, "encode=" + encode);
+        if (encode == 0) {
+            cameraActivity.shared(yByte, uByte, vByte, w, h);
+        }
     }
 
     public void onFrame(UiVideoData uiVideoData) {

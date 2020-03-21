@@ -5,21 +5,24 @@
 #ifndef PLAYVIDEO_FFMPEGENCOD_H
 #define PLAYVIDEO_FFMPEGENCOD_H
 
+#include "sc_playvideo_videonative_MediaNative.h"
 #ifdef __cplusplus
 extern "C" {
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
+
 #endif
-class FfmpegEncod {
+class FFmpegEncode {
 public:
-    int creatFFmpeg();
+    int creatFFmpeg(AVCodecID id);
 
     int encodeFFmpeg(uint8_t *framedata, int framelen,//input
-                     uint8_t *outputY,uint8_t *outputU,uint8_t *outputV, int *width, int *height, AVPixelFormat *pixfmt);
+                     uint8_t *outputY, uint8_t *outputU, uint8_t *outputV, int *width, int *height,
+                     AVPixelFormat pixfmt);
 
     int initAVCodecContext(int width, int heigth, int fps, AVPixelFormat pixFmt);
 
     void copyYUVData(AVCodecContext *pPacket, AVPacket *outputframe, uint8_t *string);
+
+    void unEncode();
 
 public:
     AVCodec *mAVCodec = NULL;
