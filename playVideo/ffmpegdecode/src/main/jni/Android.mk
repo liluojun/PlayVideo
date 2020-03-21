@@ -44,7 +44,7 @@ include $(PREBUILT_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_C_INCLUDES +=$(LOCAL_PATH)/../../../media/ffmpeg/include/
 LOCAL_MODULE    :=mediaffmpeg
-LOCAL_SRC_FILES :=  FfmpegEncod.cpp nativeFfmpeg.cpp
+LOCAL_SRC_FILES :=  FFmpegEncode.cpp nativeFfmpeg.cpp
 
 LOCAL_SHARED_LIBRARIES := avcodec avdevice avfilter avformat avutil postproc swresample swscale
 

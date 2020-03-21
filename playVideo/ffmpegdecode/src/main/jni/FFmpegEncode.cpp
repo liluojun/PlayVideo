@@ -2,7 +2,7 @@
 // Created by Administrator on 2019/10/20.
 //
 
-#include "FfmpegEncod.h"
+#include "FFmpegEncode.h"
 
 #ifdef __cplusplus
 extern "C" {

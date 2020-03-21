@@ -4,7 +4,7 @@
 #include <jni.h>
 #include <android/log.h>
 #include "sc_playvideo_videonative_MediaNative.h"
-#include "FfmpegEncod.h"
+#include "FFmpegEncode.h"
 
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
 FfmpegEncod *encode;
