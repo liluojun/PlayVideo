@@ -2,6 +2,7 @@
 // Created by Administrator on 2019/10/20.
 //
 #include "FFmpegEncode.h"
+
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
 #ifdef __cplusplus
 extern "C" {
@@ -75,10 +76,10 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
 
         switch (mAVCodecContext->pix_fmt) {
             case AV_PIX_FMT_YUV420P: {
-                memcpy( outputY,mAVFrame->data[0], *width * *height);
-                memcpy( outputU,mAVFrame->data[1], *width * *height / 4);
-                memcpy(outputV,mAVFrame->data[2],  *width * *height / 4);
-
+                memcpy(outputY, mAVFrame->data[0], *width * *height);
+                memcpy(outputU, mAVFrame->data[1], *width * *height / 4);
+                memcpy(outputV, mAVFrame->data[2], *width * *height / 4);
+                LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
                 width = &(mAVCodecContext->width);
                 height = &(mAVCodecContext->height);
                 pixfmt = mAVCodecContext->pix_fmt;
@@ -86,9 +87,10 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
             }
             case AV_PIX_FMT_NV21: {
 
-                memcpy( outputY,mAVFrame->data[0], *width * *height);
-                memcpy( outputU,mAVFrame->data[1], *width * *height / 4);
-                memcpy(outputV,mAVFrame->data[2],  *width * *height / 4);
+                memcpy(outputY, mAVFrame->data[0], *width * *height);
+                memcpy(outputU, mAVFrame->data[1], *width * *height / 4);
+                memcpy(outputV, mAVFrame->data[2], *width * *height / 4);
+                LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
                 width = &(mAVCodecContext->width);
                 height = &(mAVCodecContext->height);
                 pixfmt = mAVCodecContext->pix_fmt;
@@ -104,11 +106,7 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
         return 0;
     }
 }
-void
-FFmpegEncode::copyYUVData(AVCodecContext *mAVCodecContext, AVPacket *pPacket,
-                          uint8_t *outputframe) {
 
-}
 void
 FFmpegEncode::unEncode() {
     avcodec_close(mAVCodecContext);

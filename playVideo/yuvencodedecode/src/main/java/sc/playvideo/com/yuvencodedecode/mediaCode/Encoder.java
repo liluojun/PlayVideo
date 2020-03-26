@@ -199,10 +199,7 @@ public class Encoder {
                     if (colorFormat <= 20) {
                         JavaToNativeMethod.getInstence().nv21ToI420(input, yuv420sp, m_width, m_height, yByte, uByte, vByte);
                     } else {
-                        long l = System.currentTimeMillis();
                         JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height, yByte, uByte, vByte);
-                        Log.e(TAG, "encoder time=" + (System.currentTimeMillis() - l));
-
                     }
                     yuvData.creatBuffer(yByte, uByte, vByte);
                     if (myGlsurface != null) {
@@ -258,7 +255,6 @@ public class Encoder {
                                 }
 
                             } else {
-
                                 if ((outData[4] & 0x1f) == 5) {
                                     byte[] keyframe = new byte[bufferInfo.size + configbyte.length];
                                     System.arraycopy(configbyte, 0, keyframe, 0, configbyte.length);
@@ -269,7 +265,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        Decoder.getDecoder().onFFmpegFrame(u);
+                                        // Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
@@ -277,7 +273,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        Decoder.getDecoder().onFFmpegFrame(u);
+                                        //Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
@@ -368,16 +364,20 @@ public class Encoder {
                                     u._data = keyframe;
                                     //编码后的数据
                                     if (myGlsurface != null) {
+                                        //调用硬件解码
                                         // Decoder.getDecoder().onFrame(u);
-                                        Decoder.getDecoder().onFFmpegFrame(u);
+                                        //调用FFmpeg软解
+                                        // Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
                                     u._data = outData;
                                     //编码后的数据
                                     if (myGlsurface != null) {
+                                        //调用硬件解码
                                         // Decoder.getDecoder().onFrame(u);
-                                        Decoder.getDecoder().onFFmpegFrame(u);
+                                        //调用FFmpeg软解
+                                        //Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);

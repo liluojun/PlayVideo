@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import media.jni.JavaToNativeMethod;
+import media.jni.MediaCallBack;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Encoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
@@ -36,11 +37,13 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
 
     private boolean isPause;
 
+
     public CameraSurfaceManage(Context context, MyGlsurface myGlsurface) {
         this.context = context;
         this.myGlsurface = myGlsurface;
         framerate = 20;
         biterate = 1024 * 1000;
+
     }
 
     public void setWh(int width, int height) {
@@ -82,6 +85,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
                     }
 
                     parameters.setPreviewSize(width, height);
+                    // parameters.setPreviewSize(640, 480);
                     List<String> supportedFocusModes = parameters.getSupportedFocusModes();
 
                     if (supportedFocusModes.size() > 0) {
@@ -144,6 +148,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
             parameters.setPreviewFrameRate(framerate);
 
             parameters.setPreviewSize(width, height);
+            //parameters.setPreviewSize(640, 480);
             List<String> supportedFocusModes = parameters.getSupportedFocusModes();
 
             if (supportedFocusModes.size() > 0) {
@@ -186,11 +191,8 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
     }
 
     private void initDecoder() {
-        Log.e(TAG, "initDecoder");
         if (JavaToNativeMethod.getInstence().creatFfmpeg() == 0) {
-            Log.e(TAG, "initDecoder1");
             int i = JavaToNativeMethod.getInstence().initContext(width, height, framerate);
-            Log.e(TAG, "initDecoder  " + i);
         }
     }
 
@@ -276,6 +278,7 @@ public class CameraSurfaceManage implements Camera.PreviewCallback {
                 if (avcCodec == null) {
                     int w = camera.getParameters().getPreviewSize().width;
                     int h = camera.getParameters().getPreviewSize().height;
+
                     if (ScreenOrientation == Configuration.ORIENTATION_PORTRAIT) {
                         avcCodec = new Encoder(context, w, h, framerate, biterate, myGlsurface);
                     } else {

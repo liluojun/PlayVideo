@@ -7,11 +7,13 @@ import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import media.jni.JavaToNativeMethod;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
@@ -22,9 +24,9 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity implements LiveDataBusController.LiveDataBusCallBack {
 
-    private static final String TAG = "CameraActivity";
+    public static final String TAG = "CameraActivity";
     private CameraSurfaceManage cameraSurfaceManage;
     private MyGlsurface myGlSurface, myGlSurface1;
 
@@ -41,7 +43,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-
+        LiveDataBusController.getInstance().addRegister(TAG, this, this);
         myGlSurface = findViewById(R.id.myGlSurface);
         myGlSurface1 = findViewById(R.id.myGlSurface1);
         bt = findViewById(R.id.bt);
@@ -56,6 +58,12 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cameraSurfaceManage.startCutter720p();
+            }
+        });
+        findViewById(R.id.bt3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JavaToNativeMethod.getInstence().openStream("rtmp://202.69.69.180:443/webcast/bshdlive-pc");
             }
         });
         cameraSurfaceManage = new CameraSurfaceManage(this, myGlSurface);
@@ -171,6 +179,11 @@ public class CameraActivity extends AppCompatActivity {
         myGlSurface1.uplaodTexture(yuvData);
     }
 
+    public void shared(YUVData yuv) {
+        //渲染
+        myGlSurface1.uplaodTexture(yuv);
+    }
+
     void wfile(byte[] b) {
         try {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/aa.yuv");
@@ -219,5 +232,16 @@ public class CameraActivity extends AppCompatActivity {
         } catch (Throwable t) {
             t.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+            case EventType.SHARE_VIDEO_DATA: {
+                shared((YUVData) msg.obj);
+                break;
+            }
+        }
+        return false;
     }
 }

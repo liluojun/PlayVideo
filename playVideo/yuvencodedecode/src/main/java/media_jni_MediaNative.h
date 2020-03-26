@@ -6,9 +6,6 @@
 #define _Included_media_jni_MediaNative
 #ifdef __cplusplus
 extern "C" {
-#include "libavcodec/avcodec.h"
-#include "libavformat/avformat.h"
-#include <android/log.h>
 #endif
 /*
  * Class:     media_jni_MediaNative
@@ -41,13 +38,15 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_encode
  */
 JNIEXPORT void JNICALL Java_media_jni_MediaNative_unFfmpeg
   (JNIEnv *, jobject);
+
 /*
  * Class:     media_jni_MediaNative
  * Method:    openStream
  * Signature: (Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_openStream
-        (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject, jstring);
+
 #ifdef __cplusplus
 }
 #endif

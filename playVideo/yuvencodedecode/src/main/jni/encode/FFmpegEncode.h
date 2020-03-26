@@ -6,6 +6,7 @@
 #define PLAYVIDEO_FFMPEGENCOD_H
 
 #include "media_jni_MediaNative.h"
+
 #ifdef __cplusplus
 extern "C" {
 
@@ -20,8 +21,6 @@ public:
 
     int initAVCodecContext(int width, int heigth, int fps, AVPixelFormat pixFmt);
 
-    void copyYUVData(AVCodecContext *pPacket, AVPacket *outputframe, uint8_t *string);
-
     void unEncode();
 
 public:
@@ -29,6 +28,7 @@ public:
     AVCodecContext *mAVCodecContext = NULL;
     AVFrame *mAVFrame = NULL;
     AVPacket *mAVPacket = NULL;
+
 };
 #ifdef __cplusplus
 }

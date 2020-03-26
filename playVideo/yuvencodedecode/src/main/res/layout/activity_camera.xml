@@ -9,24 +9,30 @@
         android:id="@+id/myGlSurface"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/bt"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="强制I帧"/>
+            android:text="强制I帧" />
 
         <Button
             android:id="@+id/bt2"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="裁剪"/>
+            android:text="裁剪" />
+
+        <Button
+            android:id="@+id/bt3"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="播放网络流" />
     </LinearLayout>
 
     <sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface

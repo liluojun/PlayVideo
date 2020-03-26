@@ -47,6 +47,10 @@ public class JavaToNativeMethod {
         return mMediaNative.encode(src, outY, outV, outU, w, h);
     }
 
+    public int openStream(String path) {
+        return mMediaNative.openStream(path);
+    }
+
     public void unFfmpeg() {
         mMediaNative.unFfmpeg();
     }

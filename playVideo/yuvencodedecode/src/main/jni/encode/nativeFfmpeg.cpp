@@ -3,12 +3,28 @@
 
 #include "media_jni_MediaNative.h"
 #include "FFmpegEncode.h"
+#include "FFmpegEncodeStream.h"
+#include "Util.cpp"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#define MEDIAC_ALLBACK "media/jni/MediaCallBack"
 FFmpegEncode *encode = NULL;
+FFmpegEncodeStream *encodeStream = NULL;
+JavaVM *jvm;
+MediaCallBack *mMediaCallBack;
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
+    jvm = vm;
+    JNIEnv *env = NULL;
+    jint result = -1;
+    if (vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        return result;
+    }
+    return JNI_VERSION_1_6;
+}
+
 void releaseByteArray(JNIEnv *env, jbyteArray array, uint8_t *elems, jint mode) {
     env->ReleaseByteArrayElements(array, (jbyte *) elems, mode);
     env->DeleteLocalRef(array);
@@ -65,6 +81,21 @@ JNIEXPORT void JNICALL Java_media_jni_MediaNative_unFfmpeg
         free(encode);
     }
 }
+/*
+ * Class:     media_jni_MediaNative
+ * Method:    openStream
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_media_jni_MediaNative_openStream
+        (JNIEnv *env, jobject obj, jstring path) {
+    encodeStream = new FFmpegEncodeStream();
+    mMediaCallBack = new MediaCallBack();
+    mMediaCallBack->jvm = jvm;
+    mMediaCallBack->env = env;
+    encodeStream->mMediaCallBack = mMediaCallBack;
+    initClassHelper(env, MEDIAC_ALLBACK, &(mMediaCallBack->returnBack));
+    return encodeStream->openStream(jstringTostr(env, path));
+} ;
 #ifdef __cplusplus
 }
 #endif
