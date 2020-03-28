@@ -96,6 +96,25 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_openStream
     initClassHelper(env, MEDIAC_ALLBACK, &(mMediaCallBack->returnBack));
     return encodeStream->openStream(jstringTostr(env, path));
 } ;
+/*
+ * Class:     media_jni_MediaNative
+ * Method:    closeStream
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_media_jni_MediaNative_closeStream
+        (JNIEnv *env, jobject obj) {
+
+    if (encodeStream != NULL) {
+        delete encodeStream;
+    }
+    if (mMediaCallBack != NULL) {
+        delete mMediaCallBack;
+    }
+    if (encode != NULL) {
+        encode->unEncode();
+        delete encode;
+    }
+} ;
 #ifdef __cplusplus
 }
 #endif

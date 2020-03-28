@@ -48,6 +48,14 @@ JNIEXPORT void JNICALL Java_media_jni_MediaNative_unFfmpeg
  */
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_openStream
         (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     media_jni_MediaNative
+ * Method:    closeStream
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_media_jni_MediaNative_closeStream
+        (JNIEnv *, jobject);
 #ifdef __cplusplus
 }
 #endif

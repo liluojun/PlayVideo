@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import media.jni.JavaToNativeMethod;
+import media.jni.MediaCallBack;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;
 import sc.playvideo.com.yuvencodedecode.mediaCode.Decoder;
 import sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface;
@@ -43,7 +44,8 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        LiveDataBusController.getInstance().addRegister(TAG, this, this);
+        LiveDataBusController.getInstance().addRegister(TAG, this, null);
+        MediaCallBack.a(this);
         myGlSurface = findViewById(R.id.myGlSurface);
         myGlSurface1 = findViewById(R.id.myGlSurface1);
         bt = findViewById(R.id.bt);
@@ -63,7 +65,7 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
         findViewById(R.id.bt3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JavaToNativeMethod.getInstence().openStream("rtmp://202.69.69.180:443/webcast/bshdlive-pc");
+                JavaToNativeMethod.getInstence().openStream("rtmp://58.200.131.2:1935/livetv/hunantv");
             }
         });
         cameraSurfaceManage = new CameraSurfaceManage(this, myGlSurface);
@@ -76,80 +78,11 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
     protected void onDestroy() {
         if (cameraSurfaceManage != null)
             cameraSurfaceManage.stopCamera();
+        JavaToNativeMethod.getInstence().closeStream();
         super.onDestroy();
+        LiveDataBusController.getInstance().removeRegister(TAG, this, null);
     }
 
-    /**
-     * h264编码后的数据
-     *
-     * @param uiVideoData
-     */
-    public void updateEncodeData(UiVideoData uiVideoData) {
-        if (cameraSurfaceManage.getCamera() != null) {
-            Camera camera = cameraSurfaceManage.getCamera();
-            int w = camera.getParameters().getPreviewSize().width;
-            int h = camera.getParameters().getPreviewSize().height;
-
-            MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", w, h);
-
-            try {
-                mediaCodec = MediaCodec.createDecoderByType("video/avc");//这里是建立的解码器
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            mediaCodec.configure(mediaFormat, null, null, 0);
-            mediaCodec.start();
-
-            onFrame(uiVideoData, w, h);
-//            offerDecoder(uiVideoData);
-        }
-    }
-
-    private int mCount;
-
-    /**
-     * 解码
-     */
-    public void onFrame(UiVideoData uiVideoData, int w, int h) {
-        byte[] buf = uiVideoData._data;
-
-        ByteBuffer[] inputBuffers = mediaCodec.getInputBuffers();//MediaCodec在此ByteBuffer[]中获取输入数据
-        ByteBuffer[] outputBuffers = mediaCodec.getOutputBuffers(); // 解码后的数据
-        int inputBufferIndex = mediaCodec.dequeueInputBuffer(100);//获取输入缓冲区的索引
-
-        if (inputBufferIndex >= 0) {
-            ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
-            inputBuffer.clear();
-            inputBuffer.put(buf);//先获取缓冲区，再放入值
-
-            long pts = computePresentationTime(mCount);
-
-            mediaCodec.queueInputBuffer(inputBufferIndex, 0, buf.length, pts, 0);//四个参数，第一个是输入缓冲区的索引，第二个是放入的数据大小，第三个是时间戳，保证递增就是
-            mCount++;
-        } else {
-            return;
-        }
-
-        MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();//用于描述解码得到的byte[]数据的相关信息
-        int outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 12000);//-1代表一直等待，0表示不等待
-
-        while (outputBufferIndex >= 0) {//大于等于0表示解码器有数据输出
-            mediaCodec.releaseOutputBuffer(outputBufferIndex, true);
-
-            outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
-
-            ByteBuffer outputBuffer = outputBuffers[outputBufferIndex];
-
-            final byte[] outData = new byte[bufferInfo.size];
-            outputBuffer.get(outData);//将Buffer内的数据取出到字节数组中
-
-
-        }
-    }
-
-    boolean a = true;
-    int count = 0;
 
     public void shared(byte[] outData, int w, int h) {
         //渲染
@@ -194,43 +127,6 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
             os.write(b);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Generates the presentation time for frame N, in microseconds.
-     */
-    private long computePresentationTime(long frameIndex) {
-        return 132 + frameIndex * 1000000 / 20;
-    }
-
-    //解码h264数据
-    private void offerDecoder(UiVideoData uiVideoData) {
-        byte[] input = uiVideoData._data;
-        try {
-            ByteBuffer[] inputBuffers = mediaCodec.getInputBuffers();
-            int inputBufferIndex = mediaCodec.dequeueInputBuffer(0);
-            if (inputBufferIndex >= 0) {
-                ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
-                inputBuffer.clear();
-                try {
-                    inputBuffer.put(input, 0, input.length);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mediaCodec.queueInputBuffer(inputBufferIndex, 0, input.length, 0, 0);
-            }
-            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-
-            int outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
-            while (outputBufferIndex >= 0) {
-                //If a valid surface was specified when configuring the codec,
-                //passing true renders this output buffer to the surface.
-                mediaCodec.releaseOutputBuffer(outputBufferIndex, true);
-                outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
         }
     }
 

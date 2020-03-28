@@ -79,7 +79,7 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
                 memcpy(outputY, mAVFrame->data[0], *width * *height);
                 memcpy(outputU, mAVFrame->data[1], *width * *height / 4);
                 memcpy(outputV, mAVFrame->data[2], *width * *height / 4);
-                LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
+             //   LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
                 width = &(mAVCodecContext->width);
                 height = &(mAVCodecContext->height);
                 pixfmt = mAVCodecContext->pix_fmt;
@@ -90,14 +90,13 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
                 memcpy(outputY, mAVFrame->data[0], *width * *height);
                 memcpy(outputU, mAVFrame->data[1], *width * *height / 4);
                 memcpy(outputV, mAVFrame->data[2], *width * *height / 4);
-                LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
+            //   LOGE("Ysize=%d ***yData=%d***%d", sizeof(uint8_t)*mAVFrame->width*mAVFrame->height, sizeof(*(mAVFrame->data[0])),mAVFrame->linesize);
                 width = &(mAVCodecContext->width);
                 height = &(mAVCodecContext->height);
                 pixfmt = mAVCodecContext->pix_fmt;
                 break;
             }
             default: {
-
                 printf("mAVCodecContext->pix_fmt Failure to identify\n");
                 return -4;
             }

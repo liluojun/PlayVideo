@@ -10,6 +10,8 @@ public class MediaNative {
 
     public native void unFfmpeg();
 
+    public native void closeStream();
+
     /**********************************************/
     public native int openStream(String path);
 }

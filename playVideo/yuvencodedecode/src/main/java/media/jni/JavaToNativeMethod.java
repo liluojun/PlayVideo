@@ -54,4 +54,8 @@ public class JavaToNativeMethod {
     public void unFfmpeg() {
         mMediaNative.unFfmpeg();
     }
+
+    public void closeStream() {
+        mMediaNative.closeStream();
+    }
 }

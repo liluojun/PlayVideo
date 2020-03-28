@@ -6,7 +6,6 @@
 #define PLAYVIDEO_FFMPEGENCODESTREAM_H
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #include "MediaCallBack.h"
@@ -17,6 +16,8 @@ extern "C" {
 class FFmpegEncodeStream {
 public:
     int openStream(char *path);
+
+    ~FFmpegEncodeStream();
 
 public:
     AVCodec *mAVCodec = NULL;

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 /**
  * Created by hjt on 2019/12/13
  */
@@ -25,18 +24,16 @@ public class LiveDataBusController {
 
     private Handler handler = new Handler(Looper.getMainLooper());
     private Map<LiveDataBusCallBack, Observer> map = new HashMap<>();
-    private static LiveDataBusController mLiveDataBusController = null;
+
+
+    private static class SingletonHolder {
+        private static final LiveDataBusController INSTANCE = new LiveDataBusController();
+    }
 
     public static LiveDataBusController getInstance() {
-        if (mLiveDataBusController == null) {
-            synchronized (LiveDataBusController.class) {
-                if (mLiveDataBusController == null) {
-                    mLiveDataBusController = new LiveDataBusController();
-                }
-            }
-        }
-        return mLiveDataBusController;
+        return SingletonHolder.INSTANCE;
     }
+
 
     private void addRegister(String tag, final LiveDataBusCallBack data) {
         if (!TextUtils.isEmpty(tag) && data != null) {
@@ -113,6 +110,14 @@ public class LiveDataBusController {
                 } else {
                     handler.post(MsgRunnable.creatMsgRunnable(channel, msg));
                 }
+            }
+        }
+    }
+
+    public void sendBusMessageForTheard(String channel, Message msg) {
+        synchronized (map) {
+            if (!TextUtils.isEmpty(channel) && msg != null) {
+                LiveDataBus.get().with(channel).setValue(msg);
             }
         }
     }

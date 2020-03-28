@@ -13,7 +13,7 @@
 
 class MediaCallBack {
 public:
-    void CallBackDecodeData(AVFrame *mAVFrame);
+    void CallBackDecodeData( AVFrame *mAVFrame);
 
     bool checkDataIsError(int w, int h);
 
@@ -21,9 +21,9 @@ public:
     JNIEnv *env;
     JavaVM *jvm;
     jobject returnBack;
-    jbyteArray y;
-    jbyteArray u;
-    jbyteArray v;
+//    jbyteArray y;
+//    jbyteArray u;
+//    jbyteArray v;
 };
 
 
