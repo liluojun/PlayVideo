@@ -3,6 +3,9 @@ package sc.playvideo.com.yuvencodedecode;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.os.Bundle;
@@ -33,6 +36,7 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
 
     private MediaCodec mediaCodec = null;
     private Button bt;
+    private AudioTrack audioTrack;
 
     public static void start(Context context) {
         Intent intent = new Intent();
@@ -65,13 +69,14 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
         findViewById(R.id.bt3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JavaToNativeMethod.getInstence().openStream("rtmp://58.200.131.2:1935/livetv/hunantv");
+                JavaToNativeMethod.getInstence().openStream(/*"http://vjs.zencdn.net/v/oceans.mp4"*/"rtmp://58.200.131.2:1935/livetv/hunantv");
             }
         });
         cameraSurfaceManage = new CameraSurfaceManage(this, myGlSurface);
         cameraSurfaceManage.setWh(1280, 720);
         cameraSurfaceManage.initCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
         Decoder.getDecoder().setContext(this);
+        audioTrack = audioInit();
     }
 
     @Override
@@ -137,7 +142,24 @@ public class CameraActivity extends AppCompatActivity implements LiveDataBusCont
                 shared((YUVData) msg.obj);
                 break;
             }
+            case EventType.SHARE_AUDIO_DATA:{
+                audioTrack.write((byte[])msg.obj,0,((byte[])msg.obj).length);
+                break;
+            }
         }
         return false;
     }
+    //初始化播放器
+    public AudioTrack audioInit(){
+        //音频码流 PCM 16位
+        int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+        int sampleRateInHz=44100;
+        int buffSize = AudioTrack.getMinBufferSize(sampleRateInHz, AudioFormat.CHANNEL_OUT_STEREO, audioFormat);
+
+        AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz, AudioFormat.CHANNEL_OUT_STEREO, audioFormat, buffSize, AudioTrack.MODE_STREAM);
+        audioTrack.play();
+        return audioTrack;
+
+    }
+
 }

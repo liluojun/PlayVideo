@@ -14,8 +14,7 @@
 class MediaCallBack {
 public:
     void CallBackDecodeData( AVFrame *mAVFrame);
-
-    bool checkDataIsError(int w, int h);
+    void CallBackDecodeDataAudio( uint8_t* data,int size);
 
 public:
     JNIEnv *env;

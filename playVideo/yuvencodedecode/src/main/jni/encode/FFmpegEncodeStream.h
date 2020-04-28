@@ -11,6 +11,7 @@ extern "C" {
 #include "MediaCallBack.h"
 #include "libavformat/avformat.h"
 #include "libavcodec/avcodec.h"
+#include "libswresample/swresample.h"
 #include <android/log.h>
 #endif
 class FFmpegEncodeStream {

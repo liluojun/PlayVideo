@@ -26,16 +26,12 @@ void MediaCallBack::CallBackDecodeData(AVFrame *mAVFrame) {
     jbyteArray v = JniEnv->NewByteArray(mAVFrame->width * mAVFrame->height / 4);
     JniEnv->SetByteArrayRegion(y, 0, mAVFrame->width * mAVFrame->height,
                                (jbyte *) mAVFrame->data[0]);
-    LOGE("11");
     JniEnv->SetByteArrayRegion(u, 0, mAVFrame->width * mAVFrame->height / 4,
                                (jbyte *) mAVFrame->data[1]);
-    LOGE("22");
     JniEnv->SetByteArrayRegion(v, 0, mAVFrame->width * mAVFrame->height / 4,
                                (jbyte *) mAVFrame->data[2]);
-    LOGE("33");
     JniEnv->CallStaticVoidMethod(clazz, mid_static_method, y, u, v, mAVFrame->width,
                                  mAVFrame->height);
-    LOGE("44");
     JniEnv->ReleaseByteArrayElements(y, JniEnv->GetByteArrayElements(y, 0), JNI_FALSE);
     JniEnv->DeleteLocalRef(y);
     JniEnv->ReleaseByteArrayElements(u, JniEnv->GetByteArrayElements(u, 0), JNI_FALSE);
@@ -47,12 +43,26 @@ void MediaCallBack::CallBackDecodeData(AVFrame *mAVFrame) {
     jvm->DetachCurrentThread();
 }
 
-bool MediaCallBack::checkDataIsError(int w, int h) {
-//    if (y != NULL && v != NULL && u != NULL && env->GetArrayLength(y) == w * h &&
-//        env->GetArrayLength(u) == w * h / 4 &&
-//        env->GetArrayLength(v) == w * h / 4) {
-//        return false;
-//    }
-    return true;
+void MediaCallBack::CallBackDecodeDataAudio(uint8_t *data, int size) {
+    JNIEnv *JniEnv;
+    jvm->AttachCurrentThread(&JniEnv, NULL);
+    jclass clazz = JniEnv->GetObjectClass(returnBack);
+    if (clazz == NULL) {
+        return;
+    }
+    jmethodID mid_static_method = JniEnv->GetStaticMethodID(clazz, "audioDataCallBackForJni",
+                                                            "([B)V");
+    if (mid_static_method == NULL) {
+        JniEnv->DeleteLocalRef(clazz);
+        return;
+    }
+    jbyteArray y = JniEnv->NewByteArray(size);
+    JniEnv->SetByteArrayRegion(y, 0, size, (jbyte *) data);
+    JniEnv->CallStaticVoidMethod(clazz, mid_static_method, y);
+    JniEnv->ReleaseByteArrayElements(y, JniEnv->GetByteArrayElements(y, 0), JNI_FALSE);
+    JniEnv->DeleteLocalRef(y);
+    JniEnv->DeleteLocalRef(clazz);
+    JniEnv = NULL;
+    jvm->DetachCurrentThread();
 }
 

@@ -30,5 +30,12 @@ public class MediaCallBack {
         }
     }
 
+    public static void audioDataCallBackForJni(byte[] audio) {
+        Log.e(TAG, "AUDIO");
+        if (CameraActivity != null) {
+            CameraActivity.handleMessage(Message.obtain(null, EventType.SHARE_AUDIO_DATA, audio));
+        }
+    }
+
 
 }
