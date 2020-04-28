@@ -12,3 +12,4 @@
     //调用FFmpeg软解
     //Decoder.getDecoder().onFFmpegFrame(u);
     这几行代码关闭硬解h264和ffmpeg软解裸h264数据功能。有需要的可以在Encoder类中恢复该功能。
+    20200328ffmpeg解码流数据放置在子线程中。
