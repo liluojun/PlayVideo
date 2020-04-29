@@ -8,11 +8,12 @@
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"FFmpegEncodeStream",__VA_ARGS__)
 #define MAX_AUDIO_FRAME_SIZE 44100
 typedef struct {
-    AVCodec *mAVCodec;
+    AVCodec *mAVCodec,*mAVAudioCodec;
     AVFrame *mAVFrame;
     AVPacket *mAVPacket;
     AVFormatContext *mAVformat;
     AVCodecContext *mAVCodecCtx;
+    AVCodecContext *mAVAudioCodecCtx;
     MediaCallBack *mMediaCallBack;
     int videoIndex, audioIndex;
     char *path;
@@ -23,7 +24,7 @@ pthread_t pthread_ts[9] = {-1L};
 bool close_thread = true;
 
 int decodeVideo() {
-    decodeContext context = {NULL, NULL, NULL, NULL, NULL, mmMediaCallBack, -1, -1, NULL};
+    decodeContext context = {NULL, NULL, NULL, NULL, NULL, NULL,NULL, mmMediaCallBack, -1, -1, NULL};
     decodeContext *mDecodeContext = &context;
     if (videoPath != NULL) {
         mDecodeContext->path = videoPath;
@@ -66,7 +67,7 @@ int decodeVideo() {
             break;
         }
     }
-    AVCodecParameters *avCodecParameters = mDecodeContext->mAVformat->streams[mDecodeContext->audioIndex]->codecpar;
+    AVCodecParameters *avCodecParameters = mDecodeContext->mAVformat->streams[mDecodeContext->videoIndex]->codecpar;
     mDecodeContext->mAVCodecCtx = avcodec_alloc_context3(NULL);
     if (mDecodeContext->mAVCodecCtx == NULL) {
         LOGE("mDecodeContext->mAVCodecCtx  ERROR");
@@ -80,35 +81,49 @@ int decodeVideo() {
         return 0;
     }
     if (avcodec_open2(mDecodeContext->mAVCodecCtx, mDecodeContext->mAVCodec, NULL) < 0) {
-        printf("avcodec_open2 error\n");
+        LOGE("avcodec_open2  ERROR");
+        return 0;
+    }
+    AVCodecParameters *avAudioCodecParameters = mDecodeContext->mAVformat->streams[mDecodeContext->audioIndex]->codecpar;
+    mDecodeContext->mAVAudioCodecCtx = avcodec_alloc_context3(NULL);
+    if (mDecodeContext->mAVAudioCodecCtx == NULL) {
+        LOGE("mDecodeContext->mAVCodecCtx  ERROR");
+        return 0;
+    }
+    if (avcodec_parameters_to_context(mDecodeContext->mAVAudioCodecCtx, avAudioCodecParameters) < 0) {
+    }
+    mDecodeContext->mAVAudioCodec = avcodec_find_decoder(mDecodeContext->mAVAudioCodecCtx->codec_id);
+    if (mDecodeContext->mAVAudioCodec == NULL) {
+        LOGE("mDecodeContext->mAVCodec  ERROR");
+        return 0;
+    }
+    if (avcodec_open2(mDecodeContext->mAVAudioCodecCtx, mDecodeContext->mAVAudioCodec, NULL) < 0) {
         LOGE("avcodec_open2  ERROR");
         return 0;
     }
     mDecodeContext->mAVFrame = av_frame_alloc();
     if (!mDecodeContext->mAVFrame) {
-        printf("av_frame_alloc error\n");
         LOGE("av_frame_alloc  ERROR");
         return 0;
     }
 
     mDecodeContext->mAVPacket = av_packet_alloc();
     if (mDecodeContext->mAVPacket == NULL) {
-        printf("av_packet_alloc error\n");
         LOGE("av_packet_alloc  ERROR");
         return 0;
     }
     SwrContext *swrCtx = swr_alloc();
     //重采样设置选项-----------------------------------------------------------start
     //输入的采样格式
-    enum AVSampleFormat in_sample_fmt = mDecodeContext->mAVCodecCtx->sample_fmt;
+    enum AVSampleFormat in_sample_fmt = mDecodeContext->mAVAudioCodecCtx->sample_fmt;
     //输出的采样格式 16bit PCM
     enum AVSampleFormat out_sample_fmt = AV_SAMPLE_FMT_S16;
     //输入的采样率
-    int in_sample_rate = mDecodeContext->mAVCodecCtx->sample_rate;
+    int in_sample_rate = mDecodeContext->mAVAudioCodecCtx->sample_rate;
     //输出的采样率
     int out_sample_rate = 44100;
     //输入的声道布局
-    uint64_t in_ch_layout = mDecodeContext->mAVCodecCtx->channel_layout;
+    uint64_t in_ch_layout = mDecodeContext->mAVAudioCodecCtx->channel_layout;
     //输出的声道布局
     uint64_t out_ch_layout = AV_CH_LAYOUT_STEREO;
 
@@ -117,7 +132,7 @@ int decodeVideo() {
                        in_sample_rate, 0, 0);
     swr_init(swrCtx);
     //存储pcm数据
-    uint8_t *out_buffer ;
+    uint8_t *out_buffer;
     av_samples_alloc(&out_buffer, NULL, 2, out_sample_rate,
                      AV_SAMPLE_FMT_S16, 0);
     //重采样设置选项-----------------------------------------------------------end
@@ -125,8 +140,9 @@ int decodeVideo() {
     while (close_thread) {
         if (av_read_frame(mDecodeContext->mAVformat, mDecodeContext->mAVPacket) >= 0 &&
             close_thread) {
-            /*if (mDecodeContext->mAVPacket->stream_index == mDecodeContext->videoIndex &&
+            if (mDecodeContext->mAVPacket->stream_index == mDecodeContext->videoIndex &&
                 close_thread) {
+                LOGE("解码视频帧");
                 int ret = avcodec_send_packet(mDecodeContext->mAVCodecCtx,
                                               mDecodeContext->mAVPacket);
                 if (ret < 0) {
@@ -155,9 +171,10 @@ int decodeVideo() {
                     }
 
                 }
-            } else*/ if (mDecodeContext->mAVPacket->stream_index == mDecodeContext->audioIndex &&
-                         close_thread) {
-                ret = avcodec_decode_audio4(mDecodeContext->mAVCodecCtx, mDecodeContext->mAVFrame,
+            } else if (mDecodeContext->mAVPacket->stream_index == mDecodeContext->audioIndex &&
+                       close_thread) {
+                LOGE("解码音频帧");
+                ret = avcodec_decode_audio4(mDecodeContext->mAVAudioCodecCtx, mDecodeContext->mAVFrame,
                                             &got_frame, mDecodeContext->mAVPacket);
                 if (ret < 0) {
                     printf("%s", "解码完成");
@@ -171,12 +188,12 @@ int decodeVideo() {
                             out_sample_rate,
                             mDecodeContext->mAVFrame->sample_rate,
                             AV_ROUND_UP);
-                    LOGE("解码%d帧", framecount++);
-                    int count=swr_convert(swrCtx, &out_buffer, out_count,
-                                (const uint8_t **) mDecodeContext->mAVFrame->data,
-                                mDecodeContext->mAVFrame->nb_samples);
+                    //LOGE("解码%d帧", framecount++);
+                    int count = swr_convert(swrCtx, &out_buffer, out_count,
+                                            (const uint8_t **) mDecodeContext->mAVFrame->data,
+                                            mDecodeContext->mAVFrame->nb_samples);
                     int size = av_samples_get_buffer_size(NULL, 2, out_count,
-                                                      out_sample_fmt, 1);
+                                                          out_sample_fmt, 1);
                     if (mDecodeContext->mMediaCallBack != NULL) {
                         mDecodeContext->mMediaCallBack->CallBackDecodeDataAudio(
                                 out_buffer, size);
@@ -191,6 +208,7 @@ int decodeVideo() {
     swr_free(&swrCtx);
     av_frame_free(&mDecodeContext->mAVFrame);
     avcodec_close(mDecodeContext->mAVCodecCtx);
+    avcodec_close(mDecodeContext->mAVAudioCodecCtx);
     avformat_close_input(&mDecodeContext->mAVformat);
 }
 

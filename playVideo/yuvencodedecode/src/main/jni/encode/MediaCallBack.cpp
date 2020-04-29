@@ -16,22 +16,25 @@ void MediaCallBack::CallBackDecodeData(AVFrame *mAVFrame) {
         return;
     }
     jmethodID mid_static_method = JniEnv->GetStaticMethodID(clazz, "videoDataCallBackForJni",
-                                                            "([B[B[BII)V");
+                                                            "([B[B[BIII)V");
     if (mid_static_method == NULL) {
         JniEnv->DeleteLocalRef(clazz);
         return;
     }
-    jbyteArray y = JniEnv->NewByteArray(mAVFrame->width * mAVFrame->height);
-    jbyteArray u = JniEnv->NewByteArray(mAVFrame->width * mAVFrame->height / 4);
-    jbyteArray v = JniEnv->NewByteArray(mAVFrame->width * mAVFrame->height / 4);
-    JniEnv->SetByteArrayRegion(y, 0, mAVFrame->width * mAVFrame->height,
+    int line = mAVFrame->linesize[0];
+    int w = mAVFrame->linesize[0];
+    int h = mAVFrame->height;
+    jbyteArray y = JniEnv->NewByteArray(w * h);
+    jbyteArray u = JniEnv->NewByteArray(w * h / 4);
+    jbyteArray v = JniEnv->NewByteArray(w * h / 4);
+    JniEnv->SetByteArrayRegion(y, 0, w * h,
                                (jbyte *) mAVFrame->data[0]);
-    JniEnv->SetByteArrayRegion(u, 0, mAVFrame->width * mAVFrame->height / 4,
+    JniEnv->SetByteArrayRegion(u, 0, w * h / 4,
                                (jbyte *) mAVFrame->data[1]);
-    JniEnv->SetByteArrayRegion(v, 0, mAVFrame->width * mAVFrame->height / 4,
+    JniEnv->SetByteArrayRegion(v, 0, w * h / 4,
                                (jbyte *) mAVFrame->data[2]);
-    JniEnv->CallStaticVoidMethod(clazz, mid_static_method, y, u, v, mAVFrame->width,
-                                 mAVFrame->height);
+    JniEnv->CallStaticVoidMethod(clazz, mid_static_method, y, u, v, w,
+                                 h, line);
     JniEnv->ReleaseByteArrayElements(y, JniEnv->GetByteArrayElements(y, 0), JNI_FALSE);
     JniEnv->DeleteLocalRef(y);
     JniEnv->ReleaseByteArrayElements(u, JniEnv->GetByteArrayElements(u, 0), JNI_FALSE);

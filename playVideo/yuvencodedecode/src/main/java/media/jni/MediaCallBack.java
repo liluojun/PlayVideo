@@ -20,7 +20,8 @@ public class MediaCallBack {
     public MediaCallBack() {
     }
 
-    public static void videoDataCallBackForJni(byte[] y, byte[] u, byte[] v, int w, int h) {
+    public static void videoDataCallBackForJni(byte[] y, byte[] u, byte[] v, int w, int h,int line) {
+        Log.e(TAG,"w="+w+"**h="+h+"**line="+line);
         YUVData mYUVData = new YUVData();
         mYUVData.yuvW = w;
         mYUVData.yuvH = h;
