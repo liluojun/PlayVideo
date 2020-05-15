@@ -201,12 +201,15 @@ public class Encoder {
                     } else {
                         JavaToNativeMethod.getInstence().nv21ToNv12(input, yuv420sp, m_width, m_height, yByte, uByte, vByte);
                     }
+//                    yuvData.yuvH=m_width ;
+//                    yuvData.yuvW=m_height;
                     yuvData.creatBuffer(yByte, uByte, vByte);
                     if (myGlsurface != null) {
                         myGlsurface.uplaodTexture(yuvData);
                     }
 
                     input = yuv420sp;
+//                    return;
                 }
                 if (!encode) {
                     return;

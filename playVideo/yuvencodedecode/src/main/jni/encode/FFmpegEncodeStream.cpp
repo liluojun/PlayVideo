@@ -8,7 +8,7 @@
 #define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"FFmpegEncodeStream",__VA_ARGS__)
 #define MAX_AUDIO_FRAME_SIZE 44100
 typedef struct {
-    AVCodec *mAVCodec,*mAVAudioCodec;
+    AVCodec *mAVCodec, *mAVAudioCodec;
     AVFrame *mAVFrame;
     AVPacket *mAVPacket;
     AVFormatContext *mAVformat;
@@ -24,7 +24,8 @@ pthread_t pthread_ts[9] = {-1L};
 bool close_thread = true;
 
 int decodeVideo() {
-    decodeContext context = {NULL, NULL, NULL, NULL, NULL, NULL,NULL, mmMediaCallBack, -1, -1, NULL};
+    decodeContext context = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, mmMediaCallBack, -1, -1,
+                             NULL};
     decodeContext *mDecodeContext = &context;
     if (videoPath != NULL) {
         mDecodeContext->path = videoPath;
@@ -76,12 +77,14 @@ int decodeVideo() {
     if (avcodec_parameters_to_context(mDecodeContext->mAVCodecCtx, avCodecParameters) < 0) {
     }
     mDecodeContext->mAVCodec = avcodec_find_decoder(mDecodeContext->mAVCodecCtx->codec_id);
+   //mDecodeContext->mAVCodec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (mDecodeContext->mAVCodec == NULL) {
         LOGE("mDecodeContext->mAVCodec  ERROR");
         return 0;
     }
-    if (avcodec_open2(mDecodeContext->mAVCodecCtx, mDecodeContext->mAVCodec, NULL) < 0) {
-        LOGE("avcodec_open2  ERROR");
+    result = avcodec_open2(mDecodeContext->mAVCodecCtx, mDecodeContext->mAVCodec, NULL);
+    if (result < 0) {
+        LOGE("avcodec_open2  ERROR %d", result);
         return 0;
     }
     AVCodecParameters *avAudioCodecParameters = mDecodeContext->mAVformat->streams[mDecodeContext->audioIndex]->codecpar;
@@ -90,9 +93,11 @@ int decodeVideo() {
         LOGE("mDecodeContext->mAVCodecCtx  ERROR");
         return 0;
     }
-    if (avcodec_parameters_to_context(mDecodeContext->mAVAudioCodecCtx, avAudioCodecParameters) < 0) {
+    if (avcodec_parameters_to_context(mDecodeContext->mAVAudioCodecCtx, avAudioCodecParameters) <
+        0) {
     }
-    mDecodeContext->mAVAudioCodec = avcodec_find_decoder(mDecodeContext->mAVAudioCodecCtx->codec_id);
+    mDecodeContext->mAVAudioCodec = avcodec_find_decoder(
+            mDecodeContext->mAVAudioCodecCtx->codec_id);
     if (mDecodeContext->mAVAudioCodec == NULL) {
         LOGE("mDecodeContext->mAVCodec  ERROR");
         return 0;
@@ -174,7 +179,8 @@ int decodeVideo() {
             } else if (mDecodeContext->mAVPacket->stream_index == mDecodeContext->audioIndex &&
                        close_thread) {
                 LOGE("解码音频帧");
-                ret = avcodec_decode_audio4(mDecodeContext->mAVAudioCodecCtx, mDecodeContext->mAVFrame,
+                ret = avcodec_decode_audio4(mDecodeContext->mAVAudioCodecCtx,
+                                            mDecodeContext->mAVFrame,
                                             &got_frame, mDecodeContext->mAVPacket);
                 if (ret < 0) {
                     printf("%s", "解码完成");

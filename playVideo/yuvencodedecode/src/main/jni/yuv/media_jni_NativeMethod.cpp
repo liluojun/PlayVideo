@@ -79,8 +79,8 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
     jint uvSize = (w >> 1) * (h >> 1);
     uint8_t *y_src = srcArray;
     uint8_t *uv_src = srcArray + ySize;
-    uint8_t *u_src = srcArray + ySize;
-    uint8_t *v_src = srcArray + ySize + uvSize;
+ //   uint8_t *u_src = srcArray + ySize;
+//    uint8_t *v_src = srcArray + ySize + uvSize;
 //    uint8_t *y_transit = transitArray;
 //    uint8_t *u_transit = transitArray + ySize;
 //    uint8_t *v_transit = transitArray + ySize + uvSize;
@@ -90,11 +90,15 @@ JNIEXPORT void JNICALL Java_media_jni_NativeMethod_nv21ToNv12
     libyuv::NV21ToI420(y_src, w, uv_src, w, yArray, w, uArray, w >> 1, vArray, w >> 1, w,
                        h);
     //I420旋转方法注释但不能删除
-//    yuv.libyuv::I420Rotate(y_transit, w, u_transit, w >> 1, v_transit, w >> 1, y_src, h, u_src, h >> 1,
-//                       v_src, h >> 1, w, h, yuv.libyuv::kRotate270);
+    //libyuv::I420Rotate(y_transit, w, u_transit, w >> 1, v_transit, w >> 1, y_src, h, u_src, h >> 1,
+     //                  v_src, h >> 1, w, h, libyuv::kRotate270);
     libyuv::I420ToNV12(yArray, w, uArray, w >> 1, vArray, w >> 1, y_dst, w, uv_dst, w, w, h);
-//    env->ReleaseByteArrayElements(transitJbyteArray, (jbyte *) transitArray, 0);
-//    env->DeleteLocalRef(transitJbyteArray);
+//    libyuv::NV21ToI420(y_src, w, uv_src, w, y_transit, w, u_transit, w >> 1, v_transit, w >> 1, w,
+//                       h);
+//    //I420旋转方法注释但不能删除
+//    libyuv::I420Rotate(y_transit, w, u_transit, w >> 1, v_transit, w >> 1, yArray, h, uArray, h >> 1,
+//                       vArray, h >> 1, w, h, libyuv::kRotate270);
+//    libyuv::I420ToNV12(yArray, w, uArray, w >> 1, vArray, w >> 1, y_dst, w, uv_dst, w, w, h);
     releaseByteArray(env, src, srcArray, 0);
     releaseByteArray(env, dst, dstArray, 0);
     releaseByteArray(env, y, yArray, 0);

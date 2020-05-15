@@ -8,8 +8,8 @@
 
 #include <stdint.h>
 #include <jni.h>
-#include "../../../../media/ffmpeg/include/libavutil/pixfmt.h"
-#include "../../../../media/ffmpeg/include/libavutil/frame.h"
+#include "libavutil/pixfmt.h"
+#include "libavutil/frame.h"
 
 class MediaCallBack {
 public:
