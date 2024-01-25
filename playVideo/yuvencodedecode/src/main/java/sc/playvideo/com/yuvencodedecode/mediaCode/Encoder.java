@@ -268,7 +268,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        // Decoder.getDecoder().onFFmpegFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
@@ -276,7 +276,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        //Decoder.getDecoder().onFFmpegFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
@@ -370,7 +370,7 @@ public class Encoder {
                                         //调用硬件解码
                                         // Decoder.getDecoder().onFrame(u);
                                         //调用FFmpeg软解
-                                        // Decoder.getDecoder().onFFmpegFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
@@ -380,7 +380,7 @@ public class Encoder {
                                         //调用硬件解码
                                         // Decoder.getDecoder().onFrame(u);
                                         //调用FFmpeg软解
-                                        //Decoder.getDecoder().onFFmpegFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);

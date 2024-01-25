@@ -10,6 +10,7 @@ extern "C" {
 #include "libyuv.h"
 #include <android/log.h>
 #include "media_jni_NativeMethod.h"
+#include<string.h>
 #endif
 void releaseByteArray(JNIEnv *env, jbyteArray array, uint8_t *elems, jint mode) {
     env->ReleaseByteArrayElements(array, (jbyte *) elems, mode);
