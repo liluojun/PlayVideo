@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.aliyun.openglc.R;
+
 import media.jni.JavaToNativeMethod;
 import media.jni.MediaCallBack;
 import sc.playvideo.com.yuvencodedecode.bean.UiVideoData;

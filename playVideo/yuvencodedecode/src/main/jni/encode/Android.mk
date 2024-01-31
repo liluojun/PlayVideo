@@ -85,7 +85,7 @@ ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)
 include $(CLEAR_VARS)
 LOCAL_MODULE    :=mediaffmpeg
 LOCAL_C_INCLUDES :=$(LOCAL_PATH)/../../../../media/ffmpeg/armeabi-v7a/include/
-LOCAL_SRC_FILES := nativeFfmpeg.cpp FFmpegEncode.cpp Util.cpp MediaCallBack.cpp FFmpegEncodeStream.cpp
+LOCAL_SRC_FILES := nativeFfmpeg.cpp FFmpegEncode.cpp Util.cpp MediaCallBack.cpp FFmpegEncodeStream.cpp $(LOCAL_PATH)/videoRender/VideoRender.cpp
 
 LOCAL_SHARED_LIBRARIES := avformat avcodec avfilter avutil swresample swscale
 LOCAL_LDLIBS    += -llog -landroid -lc

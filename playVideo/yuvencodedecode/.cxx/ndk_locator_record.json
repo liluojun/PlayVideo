@@ -1,0 +1,45 @@
+{
+  "ndkFolder": "G:\\android-ndk-r20b-windows-x86_64\\android-ndk-r20b",
+  "messages": [
+    {
+      "level": "INFO",
+      "message": "android.ndkVersion from module build.gradle is not set"
+    },
+    {
+      "level": "INFO",
+      "message": "ndk.dir in local.properties is G:\\android-ndk-r20b-windows-x86_64\\android-ndk-r20b"
+    },
+    {
+      "level": "INFO",
+      "message": "ANDROID_NDK_HOME environment variable is not set"
+    },
+    {
+      "level": "INFO",
+      "message": "sdkFolder is G:\\sdk"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering G:\\android-ndk-r20b-windows-x86_64\\android-ndk-r20b by ndk.dir"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering G:\\sdk\\ndk-bundle in SDK ndk-bundle folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering G:\\sdk\\ndk\\20.0.5594570 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering G:\\sdk\\ndk\\23.0.7599858 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering G:\\sdk\\ndk\\25.2.9519653 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Found requested ndk.dir (G:\\android-ndk-r20b-windows-x86_64\\android-ndk-r20b) which has version 20.1.5948944"
+    }
+  ]
+}
