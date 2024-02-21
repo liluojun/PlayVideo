@@ -3,6 +3,6 @@ APP_ABI := armeabi-v7a arm64-v8a
 #arm64-v8a
 #APP_PLATFORM为指定android平台版本 差不多相当于SDK里面的targetSDKVersion
 APP_PLATFORM := android-21
-
+APP_STL := c++_static
 
 

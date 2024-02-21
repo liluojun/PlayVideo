@@ -8,7 +8,7 @@ import sc.playvideo.videonative.MediaNative;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MediaNative mediaNative;
+    public static MediaNative mediaNative;
     private static final String TAG="MainActivity";
 
     @Override

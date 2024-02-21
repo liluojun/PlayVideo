@@ -25,7 +25,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     return JNI_VERSION_1_6;
 }
 
-void releaseByteArray(JNIEnv *env, jbyteArray array, uint8_t *elems, jint mode) {
+void releaseByteArray2(JNIEnv *env, jbyteArray array, uint8_t *elems, jint mode) {
     env->ReleaseByteArrayElements(array, (jbyte *) elems, mode);
     env->DeleteLocalRef(array);
 }
@@ -67,10 +67,10 @@ JNIEXPORT jint JNICALL Java_com_media_opengl_OpenglSheard_encode
         result = encode->encodeFFmpeg(srcArray, lenth, yArray, uArray, vArray, &w, &h,
                                       AV_PIX_FMT_NV21);
     }
-    releaseByteArray(env, src, srcArray, 0);
-    releaseByteArray(env, y, yArray, 0);
-    releaseByteArray(env, v, vArray, 0);
-    releaseByteArray(env, u, uArray, 0);
+    releaseByteArray2(env, src, srcArray, 0);
+    releaseByteArray2(env, y, yArray, 0);
+    releaseByteArray2(env, v, vArray, 0);
+    releaseByteArray2(env, u, uArray, 0);
     return result;
 } ;
 

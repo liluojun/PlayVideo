@@ -5,7 +5,7 @@
 #include "FFmpegEncodeStream.h"
 #include <pthread.h>
 
-#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"FFmpegEncodeStream",__VA_ARGS__)
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
 #define MAX_AUDIO_FRAME_SIZE 44100
 typedef struct {
     AVCodec *mAVCodec, *mAVAudioCodec;

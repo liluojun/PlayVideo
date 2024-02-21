@@ -5,6 +5,8 @@
 #include "FFmpegEncode.h"
 #include "FFmpegEncodeStream.h"
 #include "Util.cpp"
+#include "VideoRender.h"
+#include "GlThread.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +16,7 @@ FFmpegEncode *encode = NULL;
 FFmpegEncodeStream *encodeStream = NULL;
 JavaVM *jvm;
 MediaCallBack *mMediaCallBack;
-
+GlThread *mGlThread = NULL;
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     jvm = vm;
     JNIEnv *env = NULL;
@@ -33,6 +35,9 @@ void releaseByteArray(JNIEnv *env, jbyteArray array, uint8_t *elems, jint mode) 
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_creatFfmpeg
         (JNIEnv *env, jobject obj) {
     encode = new FFmpegEncode();
+    if (mGlThread != NULL) {
+        encode->mGlThread = mGlThread;
+    }
     return encode->creatFFmpeg(AV_CODEC_ID_H264);
 } ;
 /*
@@ -115,6 +120,43 @@ JNIEXPORT void JNICALL Java_media_jni_MediaNative_closeStream
         delete encode;
     }
 } ;
+JNIEXPORT jint JNICALL Java_media_jni_MediaNative_initRender(JNIEnv *env, jobject obj) {
+    mGlThread = new GlThread();
+    //  mVideoRender = new VideoRender();
+    if (encode != NULL) {
+        encode->mGlThread = mGlThread;
+    }
+    return 0;
+}
+
+JNIEXPORT jlong JNICALL
+Java_media_jni_MediaNative_creatSurface(JNIEnv *env, jobject, jobject surface, jint w, jint h) {
+    if (mGlThread == NULL) {
+        return -1;
+    }
+    ANativeWindow *mWindow = ANativeWindow_fromSurface(env, surface);
+    mGlThread->postMessage(kMsgSurfaceCreated, w, h, mWindow);
+    return 0;
+}
+
+JNIEXPORT jint JNICALL Java_media_jni_MediaNative_destorySurface(JNIEnv *, jobject, jlong handle) {
+    if (mGlThread == NULL) {
+        return -1;
+    }
+    mGlThread->postMessage(kMsgSurfaceDestroyed);
+    return 0;
+}
+
+JNIEXPORT jint JNICALL
+Java_media_jni_MediaNative_changeSurfaceSize(JNIEnv *, jobject, jlong handle, jint w, jint h) {
+    if (mGlThread == NULL) {
+        return -1;
+    }
+    mGlThread->postMessage(kMsgSurfaceChanged, w, h);
+    return 0;
+}
+
+
 #ifdef __cplusplus
 }
 #endif

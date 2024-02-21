@@ -35,9 +35,14 @@
             android:text="播放网络流" />
     </LinearLayout>
 
-    <sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface
+    <TextureView
         android:id="@+id/myGlSurface1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
+    <!--    <sc.playvideo.com.yuvencodedecode.yuv.MyGlsurface-->
+    <!--        android:id="@+id/myGlSurface1"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_weight="1" />-->
 </LinearLayout>

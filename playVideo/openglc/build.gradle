@@ -15,15 +15,23 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags ""
-                abiFilters 'arm64-v8a','armeabi-v7a'
+                cppFlags "-std=c++11"
             }
+        }
+        ndk {
+            abiFilters "arm64-v8a", "armeabi-v7a"
         }
     }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/CMakeLists.txt"
-       }
+            path "src/main/CMakeLists.txt"
+        }
+    }
+    sourceSets {
+        main {
+            //将依赖库打进apk,否则可能出现找不到库
+            jniLibs.srcDirs = ['libs']
+        }
     }
     buildTypes {
         release {
@@ -38,7 +46,7 @@ android {
 }
 
 dependencies {
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.+'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
     testImplementation 'junit:junit:4.+'

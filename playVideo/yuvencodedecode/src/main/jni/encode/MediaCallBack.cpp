@@ -6,7 +6,7 @@
 #include "MediaCallBack.h"
 #include <android/log.h>
 
-#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"FFmpegEncodeStream",__VA_ARGS__)
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,"ffmpeg",__VA_ARGS__)
 
 void MediaCallBack::CallBackDecodeData(AVFrame *mAVFrame) {
     JNIEnv *JniEnv;

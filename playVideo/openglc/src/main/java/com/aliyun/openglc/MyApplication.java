@@ -4,7 +4,6 @@ import android.app.Application;
 
 public class MyApplication extends Application {
     static {
-        System.loadLibrary("render-lib");
-
+        System.loadLibrary("renderLib");
     }
 }

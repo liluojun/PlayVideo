@@ -1,3 +1,2 @@
 include ':app', ':yuvencodedecode', ':ffmpegdecode', ':libyuv', ':test'
 include ':openglcshared'
-include ':openglc'

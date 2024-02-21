@@ -16,7 +16,7 @@ extern "C" {
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_creatFfmpeg
-  (JNIEnv *, jobject);
+        (JNIEnv *, jobject);
 
 /*
  * Class:     media_jni_MediaNative
@@ -24,7 +24,7 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_creatFfmpeg
  * Signature: (III)I
  */
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_initContext
-  (JNIEnv *, jobject, jint, jint, jint);
+        (JNIEnv *, jobject, jint, jint, jint);
 
 /*
  * Class:     media_jni_MediaNative
@@ -32,7 +32,7 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_initContext
  * Signature: ([B[B[B[BII)I
  */
 JNIEXPORT jint JNICALL Java_media_jni_MediaNative_encode
-  (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray, jbyteArray, jint, jint);
+        (JNIEnv *, jobject, jbyteArray, jbyteArray, jbyteArray, jbyteArray, jint, jint);
 
 /*
  * Class:     media_jni_MediaNative
@@ -40,7 +40,7 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_encode
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_media_jni_MediaNative_unFfmpeg
-  (JNIEnv *, jobject);
+        (JNIEnv *, jobject);
 /*
  * Class:     media_jni_MediaNative
  * Method:    openStream
@@ -56,6 +56,16 @@ JNIEXPORT jint JNICALL Java_media_jni_MediaNative_openStream
  */
 JNIEXPORT void JNICALL Java_media_jni_MediaNative_closeStream
         (JNIEnv *, jobject);
+
+
+JNIEXPORT jint JNICALL Java_media_jni_MediaNative_initRender(JNIEnv *, jobject);
+
+JNIEXPORT jlong JNICALL Java_media_jni_MediaNative_creatSurface(JNIEnv *, jobject, jobject surface, jint w, jint h);
+
+JNIEXPORT jint JNICALL Java_media_jni_MediaNative_destorySurface(JNIEnv *, jobject, jlong surface);
+
+JNIEXPORT jint JNICALL
+Java_media_jni_MediaNative_changeSurfaceSize(JNIEnv *, jobject, jlong handle, jint w, jint h);
 #ifdef __cplusplus
 }
 #endif

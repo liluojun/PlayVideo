@@ -1,6 +1,8 @@
 package media.jni;
 
 
+import android.view.Surface;
+
 public class JavaToNativeMethod {
     static JavaToNativeMethod INSTENCE;
     private static NativeMethod nativeMethod;
@@ -45,6 +47,22 @@ public class JavaToNativeMethod {
 
     public int encode(byte[] src, byte[] outY, byte[] outV, byte[] outU, int w, int h) {
         return mMediaNative.encode(src, outY, outV, outU, w, h);
+    }
+
+    public long creatSurface(Surface surface, int w, int h) {
+        return mMediaNative.creatSurface(surface, w, h);
+    }
+
+    public int initRender() {
+        return mMediaNative.initRender();
+    }
+
+    public int destorySurface(long l) {
+        return mMediaNative.destorySurface(l);
+    }
+
+    public int changeSurfaceSize(long l, int w, int h) {
+        return mMediaNative.changeSurfaceSize(l, w, h);
     }
 
     public int openStream(String path) {
