@@ -36,8 +36,9 @@ void GlThread::handleMessage(LooperMessage *msg) {
                 if (mRender->m != NULL) {
                     glClearColor(1.0, 1.0, 1.0, 1.0);
                     glClear(GL_STENCIL_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                    int *yuvTextures = mRender->m->mGlDraw->perparDrawYuv(msg->arg1, msg->arg2,
-                                                                          (YuvData *) msg->obj);
+                    int yuvTextures[3];
+                    mRender->m->mGlDraw->perparDrawYuv(msg->arg1, msg->arg2,
+                                                                          (YuvData *) msg->obj,yuvTextures);
                     mRender->m->mGlDraw->drawYuv(yuvTextures, 0, 0, mRender->m->w, mRender->m->h);
                     mRender->m->mEglEnvironment->swapBuffers();
                 }

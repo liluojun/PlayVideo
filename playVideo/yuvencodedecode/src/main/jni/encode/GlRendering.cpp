@@ -90,8 +90,10 @@ void GlRendering::setVertexAttribArray(GLchar *label,
     GLint location = getAttribLocation(label);
 // 允许使用顶点坐标数组
     glEnableVertexAttribArray(location);
+    checkNoGLES2Error("glEnableVertexAttribArray");
 // 顶点坐标传递到顶点着色器
     glVertexAttribPointer(location, dimension, GL_FLOAT, false, stride, pointer);
+    checkNoGLES2Error("glVertexAttribPointer");
 }
 
 /**
