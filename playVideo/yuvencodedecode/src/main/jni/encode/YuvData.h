@@ -11,5 +11,12 @@ struct YuvData {
     uint8_t *y;
     uint8_t *u;
     uint8_t *v;
+
+    ~YuvData() {
+        delete y;
+        delete u;
+        delete v;
+    }
 };
+
 #endif //PLAYVIDEO_YUVDATA_H

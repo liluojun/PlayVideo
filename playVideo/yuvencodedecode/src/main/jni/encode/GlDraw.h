@@ -40,17 +40,17 @@ public:
 
     void prepareShader(std::string fragmentShader, float *texMatrix);
 
-    void drawYuv(int *yuvTextures, float *texMatrix,
+    void drawYuv(int yuvTextures[3], float *texMatrix,
                  int viewportX, int viewportY, int viewportWidth, int viewportHeight);
 
     void drawRectangle(int x, int y, int width, int height);
 
     void release();
 
-    void drawYuv(int *yuvTextures,
+    void drawYuv(int yuvTextures[3],
                  int viewportX, int viewportY, int viewportWidth, int viewportHeight);
 
-    int *perparDrawYuv(int width, int height, YuvData *data);
+    void perparDrawYuv(int width, int height, YuvData *data, int yuvTextures[3]);
 };
 
 

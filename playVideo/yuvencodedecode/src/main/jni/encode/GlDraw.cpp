@@ -14,7 +14,7 @@ std::string VERTEX_SHADER_STRING =
         "void main() {\n"
         "    gl_Position = in_pos;\n"
         "    interp_tc = (texMatrix * in_tc).xy;\n"
-//        "    interp_tc =  in_tc;\n"
+        //        "    interp_tc =  in_tc;\n"
         "}\n";
 std::string YUV_FRAGMENT_SHADER_STRING =
         "precision mediump float;\n"
@@ -25,27 +25,27 @@ std::string YUV_FRAGMENT_SHADER_STRING =
         "uniform sampler2D v_tex;\n"
         "\n"
         "void main() {\n"
-//        "vec3 yuv;\n"
-//        "vec3 rgb;\n"
-//        "yuv.x = texture2D(tex_y, texOut).r;\n"
-//        "yuv.y = texture2D(tex_u, texOut).r - 0.5;\n"
-//        "yuv.z = texture2D(tex_v, texOut).r - 0.5;\n"
-//        "rgb = mat3( 1, 1, 1,\n"
-//        "0, -0.39465, 2.03211,\n"
-//        "1.13983, -0.58060, 0) * yuv;\n"
-//        "gl_FragColor = vec4(rgb, 1);\n"
-                "  float y = texture2D(y_tex, interp_tc).r;\n"
-                "  float u = texture2D(u_tex, interp_tc).r - 0.5;\n"
-                "  float v = texture2D(v_tex, interp_tc).r - 0.5;\n"
-                "  gl_FragColor = vec4(y + 1.403 * v, "
-                "                      y - 0.344 * u - 0.714 * v, "
-                "                      y + 1.77 * u, 1);\n"
+        //        "vec3 yuv;\n"
+        //        "vec3 rgb;\n"
+        //        "yuv.x = texture2D(tex_y, texOut).r;\n"
+        //        "yuv.y = texture2D(tex_u, texOut).r - 0.5;\n"
+        //        "yuv.z = texture2D(tex_v, texOut).r - 0.5;\n"
+        //        "rgb = mat3( 1, 1, 1,\n"
+        //        "0, -0.39465, 2.03211,\n"
+        //        "1.13983, -0.58060, 0) * yuv;\n"
+        //        "gl_FragColor = vec4(rgb, 1);\n"
+        "  float y = texture2D(y_tex, interp_tc).r;\n"
+        "  float u = texture2D(u_tex, interp_tc).r - 0.5;\n"
+        "  float v = texture2D(v_tex, interp_tc).r - 0.5;\n"
+        "  gl_FragColor = vec4(y + 1.403 * v, "
+        "                      y - 0.344 * u - 0.714 * v, "
+        "                      y + 1.77 * u, 1);\n"
         "}\n";
 
-int *GlDraw::perparDrawYuv(int width, int height, YuvData *data) {
+void GlDraw::perparDrawYuv(int width, int height, YuvData *data, int yuvTextures[3]) {
     int planeWidths[3] = {width, width / 2, width / 2};
     int planeHeights[3] = {height, height / 2, height / 2};
-    int yuvTextures[3];
+
     for (int i = 0; i < 3; i++) {
         yuvTextures[i] = generateTexture(GL_TEXTURE_2D);
     }
@@ -77,7 +77,7 @@ int *GlDraw::perparDrawYuv(int width, int height, YuvData *data) {
         }
 
     }
-    return yuvTextures;
+
 }
 
 void GlDraw::drawYuv(int *yuvTextures,
