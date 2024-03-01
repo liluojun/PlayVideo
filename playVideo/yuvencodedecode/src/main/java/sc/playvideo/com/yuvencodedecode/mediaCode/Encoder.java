@@ -268,7 +268,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        // Decoder.getDecoder().onFFmpegFrame(u);
+                                         Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 } else {
                                     u._len = outData.length;
@@ -276,7 +276,7 @@ public class Encoder {
                                     //编码后的数据
                                     if (myGlsurface != null) {
                                         //  Decoder.getDecoder().onFrame(u);
-                                        //Decoder.getDecoder().onFFmpegFrame(u);
+                                        Decoder.getDecoder().onFFmpegFrame(u);
                                     }
                                 }
                                 mediaCodec.releaseOutputBuffer(outputBufferIndex, false);
