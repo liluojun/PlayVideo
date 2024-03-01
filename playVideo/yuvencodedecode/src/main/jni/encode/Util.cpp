@@ -34,7 +34,7 @@ static char* jstringTostr(JNIEnv* env, jstring jstr) {
                                                               encode);
     jsize strLen = env->GetArrayLength(byteArray);
     jbyte *jBuf = env->GetByteArrayElements(byteArray, JNI_FALSE);
-    if (jBuf > 0) {
+    if ((char*)jBuf > (char*)0) {
         pStr = (char*) malloc(strLen + 1);
         if (!pStr) {
             return NULL;
