@@ -92,6 +92,7 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
                        size / 4);
                 memcpy(yuvData->v, mAVFrame->data[2],
                        size / 4);
+
                 renderToC(mAVCodecContext->width, mAVCodecContext->height, yuvData);
                 break;
             }
@@ -103,6 +104,7 @@ int FFmpegEncode::encodeFFmpeg(uint8_t *framedata, int framelen,//input
                        mAVCodecContext->width * mAVCodecContext->height / 4);
                 memcpy(yuvData->v, mAVFrame->data[2],
                        mAVCodecContext->width * mAVCodecContext->height / 4);
+
                 renderToC(mAVCodecContext->width, mAVCodecContext->height, yuvData);
                 break;
             }

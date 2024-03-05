@@ -42,7 +42,7 @@ std::string YUV_FRAGMENT_SHADER_STRING =
         "                      y + 1.77 * u, 1);\n"
         "}\n";
 
-void GlDraw::perparDrawYuv(int width, int height, YuvData *data, int yuvTextures[3]) {
+void GlDraw::perparDrawYuv(int width, int height, YuvData *data, GLuint yuvTextures[3]) {
     int planeWidths[3] = {width, width / 2, width / 2};
     int planeHeights[3] = {height, height / 2, height / 2};
 
@@ -75,12 +75,11 @@ void GlDraw::perparDrawYuv(int width, int height, YuvData *data, int yuvTextures
                              (GLenum) GL_UNSIGNED_BYTE, (GLvoid *) data->v);
                 break;
         }
-
     }
 
 }
 
-void GlDraw::drawYuv(int *yuvTextures,
+void GlDraw::drawYuv(GLuint *yuvTextures,
                      int viewportX, int viewportY, int viewportWidth, int viewportHeight) {
     drawYuv(yuvTextures, matrix4x4, viewportX, viewportY,
             viewportWidth, viewportHeight);
@@ -92,7 +91,7 @@ void GlDraw::drawYuv(int *yuvTextures,
  */
 
 //
-void GlDraw::drawYuv(int *yuvTextures, float *texMatrix,
+void GlDraw::drawYuv(GLuint *yuvTextures, float *texMatrix,
                      int viewportX, int viewportY, int viewportWidth, int viewportHeight) {
 
 
@@ -106,10 +105,7 @@ void GlDraw::drawYuv(int *yuvTextures, float *texMatrix,
     }
     drawRectangle(viewportX, viewportY, viewportWidth, viewportHeight);
     // Unbind the textures as a precaution..
-    for (int i = 0; i < 3; ++i) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
+    glDeleteTextures(4, yuvTextures);
 }
 
 void GlDraw::drawRectangle(int x, int y, int width, int height) {

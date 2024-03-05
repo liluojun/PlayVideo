@@ -55,11 +55,12 @@ static void checkNoGLES2Error(char *msg) {
     if (error != GL_NO_ERROR) {
         LOGE("checkNoGLES2Error %s: GLES20 error: %d", msg, error);
     }
+
 }
-static int generateTexture(int target) {
+static GLuint generateTexture(int target) {
     GLuint textureArray[1] ;
     glGenTextures(1, textureArray);
-    int textureId = textureArray[0];
+    GLuint textureId = textureArray[0];
     glBindTexture(target, textureId);
     glTexParameterf(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
